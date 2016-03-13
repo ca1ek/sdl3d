@@ -100,12 +100,16 @@ fn main() {
         renderer.set_draw_color(RGB(20, 40, 60));
         renderer.clear();
         renderer.set_draw_color(RGB(200, 200, 200));
-        //cube.flat(screen_w, screen_h, &mut renderer);
 
+        // UNCOMMENT TO TAKE A LOOK AT LINES, IF I REMEMBER CORRECTLY IT WILL MAKE A SHAPE OF LETTER 'P'
         //lines.flat(screen_w, screen_h, &mut renderer,
         //           camera_x, camera_y, camera_z,
         //          camera_x_y, camera_x_z, camera_y_z);
-        /*
+
+
+        /* // UNCOMMENT TO TAKE A LOOK  AT DRAWING CUBES
+        // should show four cubes, you can define more yourself in cubes vector.
+        // KNOWN BUG: IF A POINT IS OFF SCREEN THEN THE WHOLE LINE ISNT DRAWN AND IT STARTS GOING TO WRONG POINT
         for cube in &mut cubes {
             use std::f64;
 
@@ -114,12 +118,13 @@ fn main() {
                       camera_x_y, camera_x_z, camera_y_z);
             
         }// end for cube in cubes */
-        // Reset relative mouse move back to 0 as everything was already moved
+        
         triangle.flat(screen_w, screen_h, &mut renderer,
                       camera_x, camera_y, camera_z,
                       camera_x_y, camera_x_z, camera_y_z);
         triangle.fill_bottom_flat(screen_w, screen_h);
 
+        // Reset relative mouse move back to 0 as everything was already moved
         camera_x_z = 0.0;
         camera_y_z = 0.0; 
         camera_x_y = 0.0;
