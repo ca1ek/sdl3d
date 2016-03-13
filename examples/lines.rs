@@ -84,7 +84,7 @@ fn main() {
                 },
                 MouseMotion {xrel, yrel, ..} => {
                     camera_x_z = (xrel as f64)/30.0;
-                    //camera_y_z = (yrel as f64)/30.0;
+                    camera_y_z = (yrel as f64)/30.0;
                 }
                 _ => {}
             }
