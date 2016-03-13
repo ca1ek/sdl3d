@@ -338,8 +338,8 @@ impl Lines {
                 line[1].z = line_end_z + self.z;
 
                 // Generate 2d lines. 
-
                 let line_begin = line[0].perspect_point(w, h); 
+                println!("{:?}", line_begin);  // EXPLAIN THIS TO ME!!!!! DAFUQ
                 let line_end = line[1].perspect_point(w, h);
                 renderer.draw_lines(&[line_begin, line_end]);
 
@@ -393,7 +393,7 @@ impl Triangle {
         self.points = [lines.lines[0][0].clone(), lines.lines[1][0].clone(), lines.lines[2][0].clone()];
     }
 
-    pub fn fill_bottom_flat(&self, w: i32, h: i32) {
+    pub fn fill_bottom_flat(&self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer) {
         let mut largest_y = -2147483648; // used value from someone gave on irc because std::i32::MIN wasnt feeling like working at the moment 
         let mut largest_index = 0 as usize;
 
@@ -401,9 +401,12 @@ impl Triangle {
         let flat_p2 = self.points[1].clone().perspect_point(w, h);
         let flat_p3 = self.points[2].clone().perspect_point(w, h);
 
+        //println!("{:?}", self.points[0].clone().x / self.points[0].clone().z);
+
         let mut top: sdl2::rect::Point;
         let mut left: sdl2::rect::Point;
         let mut right: sdl2::rect::Point;
+
         // find top, left, and right.
         {
             let points = [flat_p1, flat_p2, flat_p3];
@@ -446,11 +449,11 @@ impl Triangle {
                 }
             }
         }
-        
+        println!("{:?}", top);
         if (left.y() - top.y()) != 0 && (right.y() - top.y()) != 0 {
-            let left_slope = (left.x() - top.x()) / (left.y() - top.y());
-            let right_slope = (right.x() - top.x()) / (right.y() - top.y());
-            println!("{:?}", left_slope);
+            let left_slope = -(left.x() - top.x()) as f64 / (left.y() - top.y()) as f64;
+            let right_slope = -(right.x() - top.x()) as f64 / (right.y() - top.y()) as f64;
+            //renderer.draw_line(sdl2::rect::Point::new(right.x() + 1, right.y() + 1), sdl2::rect::Point::new(left.x() + 1, left.y() + 1));
         }
     }
 }
