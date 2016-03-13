@@ -2,12 +2,12 @@ extern crate sdl2;
 extern crate sdl2_sys;
 extern crate libc;
 
-mod start;
-mod vid;
+pub mod start;
+pub mod vid;
 
-use vid::*;
+//use vid::*;
 
-fn main() {
+/*fn main() {
     let mut rend_contx = start::bootstrap(1280, 720, "Hello world!");
     let (mut renderer, mut pump) = rend_contx;
 
@@ -132,4 +132,5 @@ fn main() {
 
         renderer.present(); 
     }
-}
+}*/
+
