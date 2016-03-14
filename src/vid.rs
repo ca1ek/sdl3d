@@ -385,7 +385,8 @@ impl Triangle {
     pub fn flat(&mut self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer,
                            cx: f64, cy: f64, cz: f64, 
                            cxy: f64, cxz: f64, cyz: f64,
-                           draw: bool) {
+                           draw: bool) 
+    {
 
         //println!("{:?}", self.points[0].perspect_point(w, h).x());
         //MOST PROBABLY USELESS MEMORY REALLOCATIONS, BUT SUCH IS LIFE.
@@ -403,7 +404,8 @@ impl Triangle {
 
     pub fn fill_bottom_flat(&mut self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer,
                             cx: f64, cy: f64, cz: f64, 
-                            cxy: f64, cxz: f64, cyz: f64) {
+                            cxy: f64, cxz: f64, cyz: f64) 
+    {
         let mut largest_y = -2147483648; // used value from someone gave on irc because std::i32::MIN wasnt feeling like working at the moment 
         let mut largest_index = 0 as usize;
 
@@ -487,6 +489,98 @@ impl Triangle {
             for i in 0..left.y() - top.y() {
                 renderer.draw_line(sdl2::rect::Point::new(right.x() + (right_slope * i as f64) as i32, right.y() - i),
                                    sdl2::rect::Point::new(left.x() + (left_slope * i as f64) as i32, left.y() - i));
+            }
+            println!("{:?} {:?}", left_slope, right_slope);
+        }
+    }
+
+    pub fn fill_top_flat(&mut self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer,
+                            cx: f64, cy: f64, cz: f64, 
+                            cxy: f64, cxz: f64, cyz: f64) 
+    {
+        let mut largest_y = -2147483648; // used value from someone gave on irc because std::i32::MIN wasnt feeling like working at the moment 
+        let mut largest_index = 0 as usize;
+
+        let p1 = self.points[0].clone();
+        let p2 = self.points[1].clone();
+        let p3 = self.points[2].clone();
+
+        let mut iterator = 0;
+        let mut sdl_points: [sdl2::rect::Point; 3] = [sdl2::rect::Point::new(0, 0); 3];
+
+        for point in &mut [p1, p2, p3] {
+            // Apply rotations
+            let self_x = self.x;
+            let self_y = self.y;
+            let self_z = self.z;
+
+            self.x += cx;
+            self.y += cy;
+            self.z += cz;
+
+            point.rotate_y_z((-cy + -self_y), (-cz + -self_z), cyz);
+            point.rotate_x_z((-cx + -self_x), (-cz + -self_z), cxz);
+            point.rotate_x_y((-cx + -self_x), (-cy + -self_y), cxy);
+
+            if !(point.angle_view < 100.0 && point.angle_view > 0.0
+            || point.angle_view < 0.0 && point.angle_view > -100.0) {
+                // Grab all the positions because Rust doesn't allow for a method 
+                // to take its instances class variable as an argument
+                let mut point_x = point.x;
+                let mut point_y = point.y;
+                let mut point_z = point.z;
+
+                point.x = point_x + self.x;
+                point.y = point_y + self.y;
+                point.z = point_z + self.z;
+
+                // Generate 2d lines. 
+                let perspect_point = point.perspect_point(w, h);
+                //println!("{:?}", perspect_point);
+                sdl_points[iterator] = perspect_point;
+
+                point.x = point_x;
+                point.y = point_y;
+                point.z = point_z;
+                self.x = self_x;
+                self.y = self_y;
+                self.z = self_z; 
+            }
+            
+            // Set points' positions back to the ones they had before.
+            self.x = self_x;
+            self.y = self_y;
+            self.z = self_z;
+
+            iterator += 1;
+        }
+
+        //println!("{:?}", sdl_points);
+
+        let flat_p1 = sdl_points[0];
+        let flat_p2 = sdl_points[1];
+        let flat_p3 = sdl_points[2];
+
+        //println!("{:?}", self.points[0].perspect_point(w, h).x());
+        
+        let mut top: sdl2::rect::Point;
+        let mut left: sdl2::rect::Point;
+        let mut right: sdl2::rect::Point;
+
+        // find top, left, and right.
+
+        let points = [flat_p1, flat_p2, flat_p3];
+        let top = points.iter().max_by_key(|p| p.y()).unwrap().clone();
+        let left = points.iter().max_by_key(|p| -p.x()).unwrap().clone();
+        let right = points.iter().max_by_key(|p| p.x()).unwrap().clone();
+
+        if (left.y() - top.y()) != 0 && (right.y() - top.y()) != 0 {
+            let left_slope = -(left.x() - top.x()) as f64 / (left.y() - top.y()) as f64;
+            let right_slope = -(right.x() - top.x()) as f64 / (right.y() - top.y()) as f64;
+
+            for i in 0..top.y() - left.y() {
+                renderer.draw_line(sdl2::rect::Point::new(right.x() + (right_slope * -i as f64) as i32, right.y() + i),
+                                   sdl2::rect::Point::new(left.x() + (left_slope * -i as f64) as i32, left.y() + i));
             }
             println!("{:?} {:?}", left_slope, right_slope);
         }
