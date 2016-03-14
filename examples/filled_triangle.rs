@@ -89,9 +89,12 @@ fn main() {
         
         triangle.flat(screen_w, screen_h, &mut renderer,
                       camera_x, camera_y, camera_z,
-                      camera_x_y, camera_x_z, camera_y_z);
+                      camera_x_y, camera_x_z, camera_y_z,
+                      false);
 
-        triangle.fill_bottom_flat(screen_w, screen_h, &mut renderer);
+        triangle.fill_bottom_flat(screen_w, screen_h, &mut renderer,
+                                  camera_x, camera_y, camera_z,
+                                  camera_x_y, camera_x_z, camera_y_z);
 
         // Reset relative mouse move back to 0 as everything was already moved
         camera_x_z = 0.0;
