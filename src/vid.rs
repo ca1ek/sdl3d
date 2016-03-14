@@ -298,7 +298,8 @@ impl Lines {
 
     pub fn flat(&mut self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer,
                            cx: f64, cy: f64, cz: f64, 
-                           cxy: f64, cxz: f64, cyz: f64) {
+                           cxy: f64, cxz: f64, cyz: f64,
+                           draw: bool) {
         for line in &mut self.lines {
             // Apply rotations
             let self_x = self.x;
@@ -341,7 +342,7 @@ impl Lines {
                 let line_begin = line[0].perspect_point(w, h); 
                 println!("{:?}", line_begin);  // EXPLAIN THIS TO ME!!!!! DAFUQ
                 let line_end = line[1].perspect_point(w, h);
-                renderer.draw_lines(&[line_begin, line_end]);
+                if draw {renderer.draw_lines(&[line_begin, line_end]);};
 
                 line[0].x = line_begin_x;
                 line[0].y = line_begin_y;
@@ -379,7 +380,8 @@ impl Triangle {
 
     pub fn flat(&mut self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer,
                            cx: f64, cy: f64, cz: f64, 
-                           cxy: f64, cxz: f64, cyz: f64) {
+                           cxy: f64, cxz: f64, cyz: f64,
+                           draw: bool) {
 
         //MOST PROBABLY USELESS MEMORY REALLOCATIONS, BUT SUCH IS LIFE.
         let mut lines = Lines::new(vec![[self.points[0].clone(), self.points[1].clone()],
@@ -388,7 +390,8 @@ impl Triangle {
 
         lines.flat(w, h, renderer,
                    cx, cy, cz,
-                   cxy, cxz, cyz);
+                   cxy, cxz, cyz, 
+                   draw);
 
         self.points = [lines.lines[0][0].clone(), lines.lines[1][0].clone(), lines.lines[2][0].clone()];
     }
