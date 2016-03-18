@@ -32,6 +32,7 @@ fn main() {
 
         std::thread::sleep(std::time::Duration::from_millis(33));
         
+        // user input
         for event in pump.poll_iter() {
             use sdl2::event::Event::*;
             use sdl2::keyboard::Keycode::*;

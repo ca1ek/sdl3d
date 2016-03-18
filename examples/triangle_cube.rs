@@ -24,8 +24,7 @@ fn main() {
     let mut camera_y_z = 0.0;
     let mut camera_x_y = 0.0;
 
-    let mut triangle = Triangle::new(DepthPoint::new(1.0, -1.0, 1.0), DepthPoint::new(-1.0, 1.0, 1.0), DepthPoint::new(1.0, 1.0, 1.0));
-    let mut top_triangle = Triangle::new(DepthPoint::new(1.0, 2.0, 1.0), DepthPoint::new(-1.0, 1.2, 1.0), DepthPoint::new(1.0, 1.2, 1.0));
+    let mut cube = TriangleGroup::new_cube(0.0, 0.0, 0.0, 1.0, 1.0, 20.0);
 
     'game_loop: loop {
         use sdl2::pixels::Color::RGB;
@@ -88,23 +87,10 @@ fn main() {
         renderer.clear();
         renderer.set_draw_color(RGB(200, 200, 200));
         
-        triangle.flat(screen_w, screen_h, &mut renderer,
-                      camera_x, camera_y, camera_z,
-                      camera_x_y, camera_x_z, camera_y_z,
-                      false);
-
-        top_triangle.flat(screen_w, screen_h, &mut renderer,
-                          camera_x, camera_y, camera_z,
-                          camera_x_y, camera_x_z, camera_y_z,
-                          true);
-
-        top_triangle.fill_top_flat(screen_w, screen_h, &mut renderer,
-                                   camera_x, camera_y, camera_z,
-                                   camera_x_y, camera_x_z, camera_y_z);
-
-        triangle.fill_bottom_flat(screen_w, screen_h, &mut renderer,
-                                  camera_x, camera_y, camera_z,
-                                  camera_x_y, camera_x_z, camera_y_z);
+        cube.flat(screen_w, screen_h, &mut renderer,
+                    camera_x, camera_y, camera_z,
+                    camera_x_y, camera_x_z, camera_y_z,
+                    true);
 
         // Reset relative mouse move back to 0 as everything was already moved
         camera_x_z = 0.0;

@@ -1,6 +1,6 @@
 extern crate sdl2;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct DepthPoint {
     pub x: f64,
     pub y: f64,
@@ -101,7 +101,7 @@ impl DepthPoint {
         self.z = new_z + cz;
     }
 
-    pub fn clone(&self) -> DepthPoint {
+    /*pub fn clone(&self) -> DepthPoint {
         DepthPoint {
             x: self.x, 
             y: self.y,
@@ -109,7 +109,7 @@ impl DepthPoint {
             x_z: self.x_z,
             angle_view: self.angle_view,
         }
-    }
+    }*/
 }
 #[derive(Debug)]
 pub struct Square {
@@ -151,7 +151,8 @@ impl Square {
                 return_buffer.push(pers_point);
             }
             /* CAUSES A COOL BUG WHEN UNCOMMENTED! I RECOMMEND TRYING IT OUT.
-            * Bug itself happens because the points position doesn't get reset when i just jump out to the next point in the loop.
+            * Bug itself happens because the points position doesn't get reset 
+            * when i just jump out to the next point in the loop.
             else {
                 continue;
             }
@@ -239,7 +240,9 @@ impl Cube {
         }
     }
 
-    pub fn flat(&mut self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer, cx: f64, cy: f64, cz: f64, cxy: f64, cxz: f64, cyz: f64) {
+    pub fn flat(&mut self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer, 
+                cx: f64, cy: f64, cz: f64, 
+                cxy: f64, cxz: f64, cyz: f64) {
         for face in &mut self.faces {
             let self_x = self.x;
             let self_y = self.y;
@@ -365,6 +368,7 @@ impl Lines {
     }
 }
 
+#[derive(Clone, Debug)]
 pub struct Triangle {
     pub points: [DepthPoint; 3],
     pub x: f64,
@@ -387,6 +391,17 @@ impl Triangle {
                            cxy: f64, cxz: f64, cyz: f64,
                            draw: bool) 
     {
+        self.points[0].x += self.x;
+        self.points[0].y += self.y;
+        self.points[0].z += self.z;
+
+        self.points[1].x += self.x;
+        self.points[1].y += self.y;
+        self.points[1].z += self.z;
+
+        self.points[2].x += self.x;
+        self.points[2].y += self.y;
+        self.points[2].z += self.z;
 
         //println!("{:?}", self.points[0].perspect_point(w, h).x());
         //MOST PROBABLY USELESS MEMORY REALLOCATIONS, BUT SUCH IS LIFE.
@@ -400,8 +415,21 @@ impl Triangle {
                    draw);
 
         self.points = [lines.lines[0][0].clone(), lines.lines[1][0].clone(), lines.lines[2][0].clone()];
+
+        self.points[0].x -= self.x;
+        self.points[0].y -= self.y;
+        self.points[0].z -= self.z;
+
+        self.points[1].x -= self.x;
+        self.points[1].y -= self.y;
+        self.points[1].z -= self.z;
+
+        self.points[2].x -= self.x;
+        self.points[2].y -= self.y;
+        self.points[2].z -= self.z;
     }
 
+    // sorry for putting the brackets at another line than definition but sublime cant collapse it unless I put it like that.
     pub fn fill_bottom_flat(&mut self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer,
                             cx: f64, cy: f64, cz: f64, 
                             cxy: f64, cxz: f64, cyz: f64) 
@@ -444,7 +472,6 @@ impl Triangle {
 
                 // Generate 2d lines. 
                 let perspect_point = point.perspect_point(w, h);
-                //println!("{:?}", perspect_point);
                 sdl_points[iterator] = perspect_point;
 
                 point.x = point_x;
@@ -463,13 +490,10 @@ impl Triangle {
             iterator += 1;
         }
 
-        //println!("{:?}", sdl_points);
 
         let flat_p1 = sdl_points[0];
         let flat_p2 = sdl_points[1];
         let flat_p3 = sdl_points[2];
-
-        //println!("{:?}", self.points[0].perspect_point(w, h).x());
         
         let mut top: sdl2::rect::Point;
         let mut left: sdl2::rect::Point;
@@ -490,7 +514,6 @@ impl Triangle {
                 renderer.draw_line(sdl2::rect::Point::new(right.x() + (right_slope * i as f64) as i32, right.y() - i),
                                    sdl2::rect::Point::new(left.x() + (left_slope * i as f64) as i32, left.y() - i));
             }
-            println!("{:?} {:?}", left_slope, right_slope);
         }
     }
 
@@ -536,7 +559,6 @@ impl Triangle {
 
                 // Generate 2d lines. 
                 let perspect_point = point.perspect_point(w, h);
-                //println!("{:?}", perspect_point);
                 sdl_points[iterator] = perspect_point;
 
                 point.x = point_x;
@@ -555,14 +577,10 @@ impl Triangle {
             iterator += 1;
         }
 
-        //println!("{:?}", sdl_points);
-
         let flat_p1 = sdl_points[0];
         let flat_p2 = sdl_points[1];
         let flat_p3 = sdl_points[2];
 
-        //println!("{:?}", self.points[0].perspect_point(w, h).x());
-        
         let mut top: sdl2::rect::Point;
         let mut left: sdl2::rect::Point;
         let mut right: sdl2::rect::Point;
@@ -575,6 +593,7 @@ impl Triangle {
         let right = points.iter().max_by_key(|p| p.x()).unwrap().clone();
 
         if (left.y() - top.y()) != 0 && (right.y() - top.y()) != 0 {
+            // if somehow division by 0 is about to happen, just don't draw, better than crashing!
             let left_slope = -(left.x() - top.x()) as f64 / (left.y() - top.y()) as f64;
             let right_slope = -(right.x() - top.x()) as f64 / (right.y() - top.y()) as f64;
 
@@ -582,7 +601,85 @@ impl Triangle {
                 renderer.draw_line(sdl2::rect::Point::new(right.x() + (right_slope * -i as f64) as i32, right.y() + i),
                                    sdl2::rect::Point::new(left.x() + (left_slope * -i as f64) as i32, left.y() + i));
             }
-            println!("{:?} {:?}", left_slope, right_slope);
+        }
+    }
+}
+
+pub struct TriangleGroup {
+    pub triangles: Vec<Triangle>,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+}
+
+impl TriangleGroup {
+    pub fn new(triangles: Vec<Triangle>) -> TriangleGroup {
+        TriangleGroup {
+            triangles: triangles,
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        }
+    }
+
+    pub fn new_square(x: f64, y: f64, z: f64, w: f64, h: f64) -> TriangleGroup {
+        let mut group = TriangleGroup::new(vec![
+                                            Triangle::new(
+                                                DepthPoint::new(0.0, 0.0, 1.0),
+                                                DepthPoint::new(0.0, w, 1.0),
+                                                DepthPoint::new(h, 0.0, 1.0)
+                                            ),
+                                            Triangle::new(
+                                                DepthPoint::new(h, w, 1.0),
+                                                DepthPoint::new(0.0, w, 1.0),
+                                                DepthPoint::new(h, 0.0, 1.0)
+                                            )
+                                           ]);
+
+        group.x = x;
+        group.y = y;
+        group.z = z;
+        group
+    }
+
+    pub fn new_cube(x: f64, y: f64, z: f64, w: f64, h: f64, d: f64) -> TriangleGroup {
+        let mut faces: Vec<Triangle> = Vec::new();
+
+        // Face 1, front face
+        let mut face1 = TriangleGroup::new_square(0.0, 0.0, 0.0, w, h).triangles;
+
+
+        // Face 2, back face
+        let mut face2 = TriangleGroup::new_square(1.0, 1.0, 20.0, w, h).triangles;
+        println!("{:?}", face2);
+        for triangle_vec in [face2].iter() {
+            for triangle in triangle_vec {
+                faces.push(triangle.clone());
+            }
+        }
+
+        let mut group = TriangleGroup::new(faces);
+        group.x = x;
+        group.y = y;
+        group.z = z;
+        group
+    }
+
+    pub fn flat(&mut self, w: i32, h: i32, renderer: &mut sdl2::render::Renderer,
+                           cx: f64, cy: f64, cz: f64, 
+                           cxy: f64, cxz: f64, cyz: f64,
+                           draw: bool) 
+    {
+        for triangle in &mut self.triangles {
+            triangle.x += self.x;
+            triangle.y += self.y;
+            triangle.z += self.z;
+
+            triangle.flat(w, h, renderer, cx, cy, cz, cxy, cxz, cyz, draw);
+
+            triangle.x -= self.x;
+            triangle.y -= self.y;
+            triangle.z -= self.z;
         }
     }
 }
