@@ -1,4 +1,4 @@
-# sdl3d
+# sdl3d [![Build Status](https://travis-ci.org/ca1ek/sdl3d.svg?branch=master)](https://travis-ci.org/ca1ek/sdl3d)
 Software renderer using SDL2
 
 # Usage
