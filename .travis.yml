@@ -2,4 +2,6 @@ language: rust
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install libsdl2-dev
+
+install:
+  - sudo apt-get install -qq libsdl2-dev
