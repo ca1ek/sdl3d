@@ -4,3 +4,4 @@ extern crate libc;
 
 pub mod start;
 pub mod vid;
+//pub mod out;
