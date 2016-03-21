@@ -1,4 +1,4 @@
-# sdl3d [![Build Status](https://api.travis-ci.org/ca1ek/sdl3d.svg?branch=refactor)](https://travis-ci.org/ca1ek/sdl3d)
+# ![](/img/icon.png) sdl3d [![Build Status](https://api.travis-ci.org/ca1ek/sdl3d.svg?branch=refactor)](https://travis-ci.org/ca1ek/sdl3d)
 Software renderer using SDL2
 
 # Usage
