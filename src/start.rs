@@ -39,7 +39,7 @@ impl<'a> Engine<'a> {
                         .opengl()
                         .build()
                         .expect("Failed on creating a new window!");
-        Engine {
+        let mut engine = Engine {
             screen_x: screen_x,
             screen_y: screen_y,
 
@@ -56,7 +56,11 @@ impl<'a> Engine<'a> {
             event_pump: sdl_ctx.event_pump().unwrap(),
 
             render_queue: Vec::new(),
-        }
+        };
+
+        engine.render_queue.reserve(128 as usize);
+
+        engine
     }
 
     pub fn render(&mut self) {
@@ -90,6 +94,7 @@ impl<'a> Engine<'a> {
         if self.camera_x_y > (PI * 2.0) {
             self.camera_x_y -= (PI * 2.0);
         }
+        
         if self.camera_y_z > (PI * 2.0) {
             self.camera_y_z -= (PI * 2.0);
         }

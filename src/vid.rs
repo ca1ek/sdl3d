@@ -198,10 +198,6 @@ pub struct Triangle {
     pub x_y: f32,
     pub x_z: f32,
     pub y_z: f32,
-
-    last_x_y: f32,
-    last_x_z: f32,
-    last_y_z: f32,
 }
 
 impl Triangle {
@@ -219,9 +215,6 @@ impl Triangle {
             x_z: 0.0,
             y_z: 0.0,
             
-            last_x_y: 0.0,
-            last_x_z: 0.0,
-            last_y_z: 0.0,
         }
     }
 
@@ -253,5 +246,17 @@ impl Triangle {
         self.p3.x_y -= self.x_y;
         self.p3.x_z -= self.x_z;
         self.p3.y_z -= self.y_z;
+    }
+}
+
+pub struct TriangleGroup {
+    pub triangles: Vec<Triangle>,
+}
+
+impl TriangleGroup {
+    pub fn new(triangles: Vec<Triangle>) -> TriangleGroup {
+        TriangleGroup {
+            triangles: triangles
+        }
     }
 }

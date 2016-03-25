@@ -20,7 +20,13 @@ fn main() {
     let point2 = DepthPoint::new(0.5, 0.5, 2.0);
     let point3 = DepthPoint::new(-0.5, 0.5, 2.0);
 
-    let mut triangle = Triangle::new(point1, point2, point3, 0.0, 0.0, 0.0);
+    let mut triangle1 = Triangle::new(point1, point2, point3, 0.0, 0.0, 0.0);
+
+    let point1 = DepthPoint::new(0.5, 0.0, 2.0);
+    let point2 = DepthPoint::new(0.5, 0.5, 2.0);
+    let point3 = DepthPoint::new(-0.5, 0.5, 2.0);
+
+    let mut triangle2 = Triangle::new(point1, point2, point3, 0.0, 0.0, 0.0);
 
     'game_loop: loop {
         engine.renderer.set_draw_color(RGB(20, 40, 60));
@@ -33,9 +39,6 @@ fn main() {
 
             match event {
                 Quit {..} => {break 'game_loop;},
-                MouseMotion {xrel, yrel, ..} => {
-                    engine.camera_x_z += xrel as f32 / 20.0;
-                },
 
                 _ => {}
             }
