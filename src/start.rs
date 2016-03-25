@@ -79,6 +79,21 @@ impl<'a> Engine<'a> {
 
         self.render_queue = Vec::new();
     }
+
+    pub fn normalize_camera(&mut self) {
+        use std::f32::consts::PI;
+
+        if self.camera_x_z > (PI * 2.0) {
+            self.camera_x_z -= (PI * 2.0);
+        }
+
+        if self.camera_x_y > (PI * 2.0) {
+            self.camera_x_y -= (PI * 2.0);
+        }
+        if self.camera_y_z > (PI * 2.0) {
+            self.camera_y_z -= (PI * 2.0);
+        }
+    }
 }
 
 

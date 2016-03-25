@@ -62,6 +62,8 @@ impl DepthPoint {
     }
 
     pub fn apply_camera_rotations(&mut self, engine: &start::Engine) {
+        use std::f32::consts::PI;
+
         let x_y = self.x_y;
         let x_z = self.x_z;
         let y_z = self.y_z;
@@ -77,6 +79,19 @@ impl DepthPoint {
         self.last_x_y = x_y;
         self.last_x_z = x_z;
         self.last_y_z = y_z;
+
+        //normalize rotations
+        if self.x_z > (PI * 2.0) {
+            self.x_z -= (PI * 2.0);
+        }
+
+        if self.x_y > (PI * 2.0) {
+            self.x_y -= (PI * 2.0);
+        }
+
+        if self.y_z > (PI * 2.0) {
+            self.y_z -= (PI * 2.0);
+        }        
     }
 
     pub fn camera_rotate_x_y(&mut self, engine: &start::Engine, angle: f32) {
@@ -123,6 +138,53 @@ impl DepthPoint {
         self.y = new_y + engine.camera_y;
         self.z = new_z + engine.camera_z;
     }  
+
+    pub fn coord_rotate_x_y(&mut self, x: f32, y: f32, angle: f32) {
+        use std::f32;
+        let s = f32::sin(angle);
+        let c = f32::cos(angle);
+
+        self.x -= x;
+        self.y -= y;
+
+        let new_x = self.x * c - self.y * s;
+        let new_y = self.x * s + self.y * c;
+
+        self.x = new_x + x;
+        self.y = new_y + y;
+    }
+    
+    pub fn coord_rotate_x_z(&mut self, x: f32, z: f32, angle: f32) {
+        use std::f32;
+        let s = f32::sin(angle);
+        let c = f32::cos(angle);
+
+        self.x -= x;
+        self.z -= z;
+
+        let new_x = self.x * c - self.z * s;
+        let new_z = self.x * s + self.z * c;
+
+        self.x = new_x + x;
+        self.z = new_z + z;
+    }
+
+    pub fn coord_rotate_y_z(&mut self, y: f32, z: f32, angle: f32) {
+        use std::f32;
+        let s = f32::sin(angle);
+        let c = f32::cos(angle);
+
+        self.y -= y;
+        self.z -= z;
+
+        let new_y = self.y * c - self.z * s;
+        let new_z = self.y * s + self.z * c;
+
+        self.y = new_y + y;
+        self.z = new_z + z;
+    }  
+
+
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -163,5 +225,11 @@ impl Triangle {
             last_x_z: 0.0,
             last_y_z: 0.0,
         }
+    }
+
+    pub fn apply_camera_rotations(&mut self, engine: &start::Engine) {
+        self.p1.apply_camera_rotations(&engine);
+        self.p2.apply_camera_rotations(&engine);
+        self.p3.apply_camera_rotations(&engine);
     }
 }
