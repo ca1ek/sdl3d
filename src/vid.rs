@@ -70,16 +70,16 @@ impl DepthPoint {
         let last_x_z = self.last_x_z;
         let last_y_z = self.last_y_z;
 
-        self.rotate_x_y(&engine, x_y - last_x_y);
-        self.rotate_x_z(&engine, x_z - last_x_z);
-        self.rotate_y_z(&engine, y_z - last_y_z);
+        self.camera_rotate_x_y(&engine, x_y - last_x_y);
+        self.camera_rotate_x_z(&engine, x_z - last_x_z);
+        self.camera_rotate_y_z(&engine, y_z - last_y_z);
 
         self.last_x_y = x_y;
         self.last_x_z = x_z;
         self.last_y_z = y_z;
     }
 
-    pub fn rotate_x_y(&mut self, engine: &start::Engine, angle: f32) {
+    pub fn camera_rotate_x_y(&mut self, engine: &start::Engine, angle: f32) {
         use std::f32;
         let s = f32::sin(angle);
         let c = f32::cos(angle);
@@ -94,7 +94,7 @@ impl DepthPoint {
         self.y = new_y + engine.camera_y;
     }
     
-    pub fn rotate_x_z(&mut self, engine: &start::Engine, angle: f32) {
+    pub fn camera_rotate_x_z(&mut self, engine: &start::Engine, angle: f32) {
         use std::f32;
         let s = f32::sin(angle);
         let c = f32::cos(angle);
@@ -109,7 +109,7 @@ impl DepthPoint {
         self.z = new_z + engine.camera_z;
     }
 
-    pub fn rotate_y_z(&mut self, engine: &start::Engine, angle: f32) {
+    pub fn camera_rotate_y_z(&mut self, engine: &start::Engine, angle: f32) {
         use std::f32;
         let s = f32::sin(angle);
         let c = f32::cos(angle);
