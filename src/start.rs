@@ -30,7 +30,7 @@ pub struct Engine<'a> {
 }
 
 impl<'a> Engine<'a> {
-    pub fn new(screen_x: u32, screen_y: u32, window_name: String) -> Engine<'a> {
+    pub fn new(screen_x: u32, screen_y: u32, window_name: String, triangle_space: usize) -> Engine<'a> {
         let sdl_ctx = sdl2::init().unwrap();
         let sdl_vid = sdl_ctx.video().unwrap();
 
@@ -39,7 +39,7 @@ impl<'a> Engine<'a> {
                         .opengl()
                         .build()
                         .expect("Failed on creating a new window!");
-        let mut engine = Engine {
+        Engine {
             screen_x: screen_x,
             screen_y: screen_y,
 
@@ -55,12 +55,8 @@ impl<'a> Engine<'a> {
 
             event_pump: sdl_ctx.event_pump().unwrap(),
 
-            render_queue: Vec::new(),
-        };
-
-        engine.render_queue.reserve(128 as usize);
-
-        engine
+            render_queue: Vec::with_capacity(triangle_space),
+        }
     }
 
     pub fn render(&mut self) {
@@ -94,7 +90,7 @@ impl<'a> Engine<'a> {
         if self.camera_x_y > (PI * 2.0) {
             self.camera_x_y -= (PI * 2.0);
         }
-        
+
         if self.camera_y_z > (PI * 2.0) {
             self.camera_y_z -= (PI * 2.0);
         }
