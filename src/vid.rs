@@ -183,8 +183,6 @@ impl DepthPoint {
         self.y = new_y + y;
         self.z = new_z + z;
     }  
-
-
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -228,8 +226,32 @@ impl Triangle {
     }
 
     pub fn apply_camera_rotations(&mut self, engine: &start::Engine) {
+        self.p1.x_y += self.x_y;
+        self.p1.x_z += self.x_z;
+        self.p1.y_z += self.y_z;
+
+        self.p2.x_y += self.x_y;
+        self.p2.x_z += self.x_z;
+        self.p2.y_z += self.y_z;
+
+        self.p3.x_y += self.x_y;
+        self.p3.x_z += self.x_z;
+        self.p3.y_z += self.y_z;
+
         self.p1.apply_camera_rotations(&engine);
         self.p2.apply_camera_rotations(&engine);
         self.p3.apply_camera_rotations(&engine);
+
+        self.p1.x_y -= self.x_y;
+        self.p1.x_z -= self.x_z;
+        self.p1.y_z -= self.y_z;
+
+        self.p2.x_y -= self.x_y;
+        self.p2.x_z -= self.x_z;
+        self.p2.y_z -= self.y_z;
+
+        self.p3.x_y -= self.x_y;
+        self.p3.x_z -= self.x_z;
+        self.p3.y_z -= self.y_z;
     }
 }

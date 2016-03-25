@@ -41,13 +41,9 @@ fn main() {
             }
         }
 
-        triangle.p1.x_z = engine.camera_x_z;
-        triangle.p2.x_z = engine.camera_x_z;
-        triangle.p3.x_z = engine.camera_x_z;
-
+        triangle.x_z = engine.camera_x_z;
 
         triangle.apply_camera_rotations(&engine);
-
 
         engine.render_queue.push(triangle);
 
