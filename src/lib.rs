@@ -1,6 +1,4 @@
-extern crate sdl2;
-extern crate sdl2_sys;
-extern crate libc;
+extern crate orbclient;
 
 pub mod start;
 pub mod vid;
