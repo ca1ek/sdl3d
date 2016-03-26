@@ -10,7 +10,7 @@ use sdl3d::start;
 fn main() {
     use sdl2::pixels::Color::RGB;
 
-    let mut engine = start::Engine::new(1280, 720, "Hello!".to_string(), 1 as usize);
+    let mut engine = start::Engine::new(1280, 720, "Hello!", 1 as usize);
 
     engine.renderer.set_draw_color(RGB(20, 40, 60));
     engine.renderer.clear();

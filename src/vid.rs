@@ -82,7 +82,7 @@ impl DepthPoint {
         }
     }
 
-    pub fn apply_camera_rotations(&mut self, engine: &start::Engine) {
+    pub fn apply_camera_rotations(&mut self, engine: &start::Window) {
         use std::f32::consts::PI;
 
         let x_y = self.x_y;
@@ -115,7 +115,7 @@ impl DepthPoint {
         }        
     }
 
-    pub fn camera_rotate_x_y(&mut self, engine: &start::Engine, angle: f32) {
+    pub fn camera_rotate_x_y(&mut self, engine: &start::Window, angle: f32) {
         use std::f32;
         let s = f32::sin(angle);
         let c = f32::cos(angle);
@@ -130,7 +130,7 @@ impl DepthPoint {
         self.y = new_y + engine.camera_y;
     }
     
-    pub fn camera_rotate_x_z(&mut self, engine: &start::Engine, angle: f32) {
+    pub fn camera_rotate_x_z(&mut self, engine: &start::Window, angle: f32) {
         use std::f32;
         let s = f32::sin(angle);
         let c = f32::cos(angle);
@@ -145,7 +145,7 @@ impl DepthPoint {
         self.z = new_z + engine.camera_z;
     }
 
-    pub fn camera_rotate_y_z(&mut self, engine: &start::Engine, angle: f32) {
+    pub fn camera_rotate_y_z(&mut self, engine: &start::Window, angle: f32) {
         use std::f32;
         let s = f32::sin(angle);
         let c = f32::cos(angle);
@@ -242,7 +242,7 @@ impl Triangle {
         }
     }
 
-    pub fn apply_camera_rotations(&mut self, engine: &start::Engine) {
+    pub fn apply_camera_rotations(&mut self, engine: &start::Window) {
         self.p1.x_y += self.x_y;
         self.p1.x_z += self.x_z;
         self.p1.y_z += self.y_z;
@@ -273,6 +273,7 @@ impl Triangle {
     }
 }
 
+#[derive(Clone, Debug)]
 pub struct TriangleGroup {
     pub triangles: Vec<Triangle>,
 }
