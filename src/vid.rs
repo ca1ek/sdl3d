@@ -1,6 +1,27 @@
-extern crate sdl2;
+extern crate orbclient;
 
 use super::start;
+
+#[derive(Debug, Clone, Copy)]
+pub struct Color {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+}
+
+impl Color {
+    pub fn new(r: u8, g: u8, b: u8) -> Color {
+        Color {
+            r: r,
+            g: g,
+            b: b,
+        }
+    }
+
+    pub fn orb_color(&self) -> orbclient::color::Color {
+        orbclient::color::Color::rgb(self.r, self.g, self.b)
+    }
+}
 
 #[derive(Clone, Copy, Debug)]
 pub struct FlatPoint {
@@ -8,11 +29,11 @@ pub struct FlatPoint {
     pub y: i32,
 }
 
-impl FlatPoint {
+/*impl FlatPoint {
     pub fn make_sdl(&self) -> sdl2::rect::Point {
         sdl2::rect::Point::new(self.x, self.y)
     }
-}
+}*/
 
 #[derive(Clone, Copy, Debug)]
 pub struct DepthPoint {
@@ -198,10 +219,12 @@ pub struct Triangle {
     pub x_y: f32,
     pub x_z: f32,
     pub y_z: f32,
+
+    pub color: Color,
 }
 
 impl Triangle {
-    pub fn new(p1: DepthPoint, p2: DepthPoint, p3: DepthPoint, x: f32, y: f32, z: f32) -> Triangle {
+    pub fn new(p1: DepthPoint, p2: DepthPoint, p3: DepthPoint, x: f32, y: f32, z: f32, color: Color) -> Triangle {
         Triangle {
             p1: p1,
             p2: p2, 
@@ -215,6 +238,7 @@ impl Triangle {
             x_z: 0.0,
             y_z: 0.0,
             
+            color: color,
         }
     }
 
