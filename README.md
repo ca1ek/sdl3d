@@ -1,5 +1,5 @@
-# ![](/img/icon.png) sdl3d [![Build Status](https://api.travis-ci.org/ca1ek/sdl3d.svg?branch=refactor)](https://travis-ci.org/ca1ek/sdl3d)
-Software renderer using SDL2
+# ![](/img/icon) tetrahedrane [![Build Status](https://api.travis-ci.org/ca1ek/tetrahedrane.svg?branch=refactor)](https://travis-ci.org/ca1ek/tetrahedrane)
+Software renderer using orbclient. Compatible with Redox and SDL2
 
 # Usage
 TODO
