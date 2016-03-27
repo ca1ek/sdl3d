@@ -3,6 +3,9 @@ extern crate sinulation;
 
 use super::start;
 
+#[cfg(target_os = "redox")]
+use sinulation::Trig;
+
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
     pub r: u8,
@@ -117,7 +120,9 @@ impl DepthPoint {
     }
 
     pub fn camera_rotate_x_y(&mut self, engine: &start::Window, angle: f32) {
+        #[cfg(not(target_os = "redox"))]
         use std::f32;
+
         let s = f32::sin(angle);
         let c = f32::cos(angle);
 
@@ -132,7 +137,9 @@ impl DepthPoint {
     }
     
     pub fn camera_rotate_x_z(&mut self, engine: &start::Window, angle: f32) {
+        #[cfg(not(target_os = "redox"))]
         use std::f32;
+
         let s = f32::sin(angle);
         let c = f32::cos(angle);
 
@@ -147,7 +154,9 @@ impl DepthPoint {
     }
 
     pub fn camera_rotate_y_z(&mut self, engine: &start::Window, angle: f32) {
+        #[cfg(not(target_os = "redox"))]
         use std::f32;
+
         let s = f32::sin(angle);
         let c = f32::cos(angle);
 
@@ -162,7 +171,9 @@ impl DepthPoint {
     }  
 
     pub fn coord_rotate_x_y(&mut self, x: f32, y: f32, angle: f32) {
+        #[cfg(not(target_os = "redox"))]
         use std::f32;
+
         let s = f32::sin(angle);
         let c = f32::cos(angle);
 
@@ -177,7 +188,9 @@ impl DepthPoint {
     }
     
     pub fn coord_rotate_x_z(&mut self, x: f32, z: f32, angle: f32) {
+        #[cfg(not(target_os = "redox"))]
         use std::f32;
+
         let s = f32::sin(angle);
         let c = f32::cos(angle);
 
@@ -192,7 +205,9 @@ impl DepthPoint {
     }
 
     pub fn coord_rotate_y_z(&mut self, y: f32, z: f32, angle: f32) {
+        #[cfg(not(target_os = "redox"))]
         use std::f32;
+
         let s = f32::sin(angle);
         let c = f32::cos(angle);
 
