@@ -65,8 +65,8 @@ impl Window {
                                                 triangle.z + self.camera_z);
             
             self.window.line(flat_1.x, flat_1.y, flat_2.x, flat_2.y, triangle.color.orb_color());
-            self.window.line(flat_2.x, flat_2.y, flat_3.x, flat_3.y, triangle.color.orb_color());
-            self.window.line(flat_3.x, flat_3.y, flat_1.x, flat_1.y, triangle.color.orb_color());
+            self.window.line(flat_3.x, flat_3.y, flat_2.x, flat_2.y, triangle.color.orb_color());
+            self.window.line(flat_1.x, flat_1.y, flat_3.x, flat_3.y, triangle.color.orb_color());
         }
 
         self.render_queue = Vec::new();

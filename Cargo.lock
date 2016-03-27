@@ -2,7 +2,7 @@
 name = "tetrahedrane"
 version = "0.1.0"
 dependencies = [
- "orbclient 0.1.6 (git+https://github.com/redox-os/orbclient)",
+ "orbclient 0.1.6 (git+https://github.com/ca1ek/orbclient)",
  "sinulation 0.1.0 (git+https://github.com/Ticki/sinulation)",
 ]
 
@@ -18,7 +18,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "libc"
-version = "0.2.7"
+version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -33,7 +33,7 @@ dependencies = [
 [[package]]
 name = "orbclient"
 version = "0.1.6"
-source = "git+https://github.com/redox-os/orbclient#d4f5efb655ca3cb7375cbdf70282a1aa47435bc7"
+source = "git+https://github.com/ca1ek/orbclient#72d58097fc3720d6187d06199f5249381d58bad3"
 dependencies = [
  "sdl2 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -43,7 +43,7 @@ name = "rand"
 version = "0.3.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "libc 0.2.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -75,5 +75,5 @@ dependencies = [
 [[package]]
 name = "sinulation"
 version = "0.1.0"
-source = "git+https://github.com/Ticki/sinulation#f5567fa635fa40868f31baea3d84d2f7bcab99f7"
+source = "git+https://github.com/Ticki/sinulation#51513022ebff4dd83652da6af3c1541c1c3e6844"
 
