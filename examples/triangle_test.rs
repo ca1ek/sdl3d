@@ -11,9 +11,9 @@ fn main() {
 
     window.window.set(Color::new(20, 40, 60).orb_color());
 
-    let point1 = DepthPoint::new(0.0, -0.5, 2.0);
-    let point2 = DepthPoint::new(0.5, 0.7, 2.0);
-    let point3 = DepthPoint::new(-0.5, 2.0, 1.0);
+    let point1 = DepthPoint::new(0.0, -0.5, 3.0);
+    let point2 = DepthPoint::new(0.5, 0.7, 3.0);
+    let point3 = DepthPoint::new(-0.5, 0.5, 3.0);
 
     let triangle = Triangle::new(point1, point2, point3, 0.0, 0.0, 0.0, Color::new(200, 200, 200));
 
