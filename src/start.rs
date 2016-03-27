@@ -83,7 +83,11 @@ impl Window {
     }
 
     pub fn normalize_camera(&mut self) {
+        #[cfg(not(target_os = "redox"))]
         use std::f32::consts::PI;
+
+        #[cfg(target_os = "redox")]
+        const PI: f32 = 3.141592653589793;
 
         if self.camera_x_z > (PI * 2.0) {
             self.camera_x_z -= (PI * 2.0);
