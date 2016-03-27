@@ -87,8 +87,12 @@ impl DepthPoint {
     }
 
     pub fn apply_camera_rotations(&mut self, engine: &start::Window) {
+        #[cfg(not(target_os = "redox"))]
         use std::f32::consts::PI;
 
+        #[cfg(target_os = "redox")]
+        const PI: f32 = 3.141592653589793;
+        
         let x_y = self.x_y;
         let x_z = self.x_z;
         let y_z = self.y_z;
