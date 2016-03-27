@@ -7,7 +7,7 @@ use tetrahedrane::start;
 
 fn main() {
 
-    let mut window = start::Window::new(1280, 720, "Hello!", 1 as usize);
+    let mut window = start::Window::new(640, 480, "Hello!", 1 as usize);
 
     window.window.set(Color::new(20, 40, 60).orb_color());
 
