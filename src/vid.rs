@@ -271,6 +271,24 @@ impl Triangle {
         self.p3.x_z -= self.x_z;
         self.p3.y_z -= self.y_z;
     }
+
+    pub fn coord_rotate_x_y(&mut self, x: f32, y: f32, angle: f32) {
+        self.p1.coord_rotate_x_y(x, y, angle);
+        self.p2.coord_rotate_x_y(x, y, angle);
+        self.p3.coord_rotate_x_y(x, y, angle);
+    }
+
+    pub fn coord_rotate_x_z(&mut self, x: f32, z: f32, angle: f32) {
+        self.p1.coord_rotate_x_z(x, z, angle);
+        self.p2.coord_rotate_x_z(x, z, angle);
+        self.p3.coord_rotate_x_z(x, z, angle);
+    }
+
+    pub fn coord_rotate_y_z(&mut self, y: f32, z: f32, angle: f32) {
+        self.p1.coord_rotate_y_z(y, z, angle);
+        self.p2.coord_rotate_y_z(y, z, angle);
+        self.p3.coord_rotate_y_z(y, z, angle);
+    }
 }
 
 #[derive(Clone, Debug)]
