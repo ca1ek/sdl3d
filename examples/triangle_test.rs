@@ -1,9 +1,9 @@
 extern crate orbclient;
 
-extern crate sdl3d;
+extern crate tetrahedrane as tetra;
 
-use sdl3d::vid::*;
-use sdl3d::start;
+use tetrahedrane::vid::*;
+use tetrahedrane::start;
 
 fn main() {
 

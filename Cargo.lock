@@ -1,8 +1,8 @@
 [root]
-name = "sdl3d"
+name = "tetrahedrane"
 version = "0.1.0"
 dependencies = [
- "orbclient 0.1.6 (git+https://github.com/ca1ek/orbclient)",
+ "orbclient 0.1.6 (git+https://github.com/redox-os/orbclient)",
 ]
 
 [[package]]
@@ -32,7 +32,7 @@ dependencies = [
 [[package]]
 name = "orbclient"
 version = "0.1.6"
-source = "git+https://github.com/ca1ek/orbclient#839a68a26ed3ad920feb30f7d0b38d63ddb8be96"
+source = "git+https://github.com/redox-os/orbclient#d4f5efb655ca3cb7375cbdf70282a1aa47435bc7"
 dependencies = [
  "sdl2 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]

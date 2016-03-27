@@ -1,56 +1,42 @@
-extern crate sdl2;
-extern crate sdl2_sys;
-extern crate libc;
+extern crate orbclient;
 
-extern crate sdl3d;
+extern crate tetrahedrane;
 
-use sdl3d::vid::*;
-use sdl3d::start;
+use tetrahedrane::vid::*;
+use tetrahedrane::start;
 
 fn main() {
-    use sdl2::pixels::Color::RGB;
 
-    let mut engine = start::Engine::new(1280, 720, "Hello!", 1 as usize);
+    let mut window = start::Window::new(1280, 720, "Hello!", 1 as usize);
 
-    engine.renderer.set_draw_color(RGB(20, 40, 60));
-    engine.renderer.clear();
-    engine.renderer.set_draw_color(RGB(200, 200, 200));
+    window.window.set(Color::new(20, 40, 60).orb_color());
 
-    let point1 = DepthPoint::new(0.0, -0.5, 2.0);
-    let point2 = DepthPoint::new(0.5, 0.5, 2.0);
-    let point3 = DepthPoint::new(-0.5, 0.5, 2.0);
+    let point1 = DepthPoint::new(0.0, -0.5, 0.0);
+    let point2 = DepthPoint::new(0.5, 0.5, 0.0);
+    let point3 = DepthPoint::new(-0.5, 0.5, 0.0);
 
-    let mut triangle = Triangle::new(point1, point2, point3, 0.0, 0.0, 0.0);
+    let mut triangle = Triangle::new(point1, point2, point3, 0.0, 0.0, 2.0, Color::new(200, 200, 200));
 
     'game_loop: loop {
-        engine.renderer.set_draw_color(RGB(20, 40, 60));
-        engine.renderer.clear();
-        engine.renderer.set_draw_color(RGB(200, 200, 200));
+        window.window.set(Color::new(20, 40, 60).orb_color());
 
-        for event in engine.event_pump.poll_iter() {
-            use sdl2::event::Event::*;
-            use sdl2::keyboard::Keycode::*;
-
-            match event {
-                Quit {..} => {break 'game_loop;},
-                MouseMotion {xrel, yrel, ..} => {
-                    engine.camera_x_z += xrel as f32 / 20.0;
-                },
-
-                _ => {}
+        let mut events = window.window.events();
+        for event in events.next() {
+            if event.code == 3 {
+                break 'game_loop;
             }
         }
+        //window.camera_z += 0.01;
 
-        triangle.x_z = engine.camera_x_z;
+        triangle.coord_rotate_x_y(0.0, 0.0, 0.01);
+        triangle.coord_rotate_x_z(0.0, 0.0, 0.02);
+        triangle.coord_rotate_y_z(0.0, 0.0, 0.03);
 
-        triangle.apply_camera_rotations(&engine);
+        window.render_queue.push(triangle);
 
-        engine.render_queue.push(triangle);
+        window.render();
 
-        engine.normalize_camera();
-        engine.render();
-
-        engine.renderer.present();
+        window.window.sync();
         std::thread::sleep(std::time::Duration::from_millis(33));
     }
 }

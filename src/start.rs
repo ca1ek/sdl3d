@@ -29,7 +29,7 @@ pub struct Window {
 
 impl Window {
     pub fn new(screen_x: u32, screen_y: u32, window_name: &str, triangle_space: usize) -> Window {
-        let win = orbclient::window::Window::new(10, 10, screen_x, screen_y, window_name).unwrap();
+        let win = orbclient::window::Window::new_flags(10, 10, screen_x, screen_y, window_name, true).unwrap();
         Window {
             screen_x: screen_x,
             screen_y: screen_y,
