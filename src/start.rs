@@ -1,14 +1,15 @@
 #![allow(unused_variables)]
 
 extern crate orbclient;
+extern crate sinulation;
+
+#[cfg(target_os = "redox")]
+use sinulation::Trig;
 
 use super::vid;
 
-/*struct SDL_handles<'a> {
-    context: sdl2::sdl::Sdl,
-    video: sdl2::sdl::VideoSubsystem,
-    renderer: sdl2::render::Renderer<'a>,
-}*/
+/*cargo build --example tetrahedrane_example --target i386-unknown-redox.json -- -C no-prepopulate-passes -C no-stack-check -C opt-level=2 -Z no-landing-pads -A dead_code
+*/
 
 pub struct Window {
     pub screen_x: u32,

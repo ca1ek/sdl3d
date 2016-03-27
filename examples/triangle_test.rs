@@ -1,6 +1,6 @@
 extern crate orbclient;
 
-extern crate tetrahedrane as tetra;
+extern crate tetrahedrane;
 
 use tetrahedrane::vid::*;
 use tetrahedrane::start;

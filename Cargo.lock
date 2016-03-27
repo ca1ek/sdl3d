@@ -3,6 +3,7 @@ name = "tetrahedrane"
 version = "0.1.0"
 dependencies = [
  "orbclient 0.1.6 (git+https://github.com/redox-os/orbclient)",
+ "sinulation 0.1.0 (git+https://github.com/Ticki/sinulation)",
 ]
 
 [[package]]
@@ -70,4 +71,9 @@ dependencies = [
  "libc 0.1.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "num 0.1.31 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "sinulation"
+version = "0.1.0"
+source = "git+https://github.com/Ticki/sinulation#f5567fa635fa40868f31baea3d84d2f7bcab99f7"
 

@@ -1,9 +1,9 @@
 extern crate orbclient;
 
-extern crate sdl3d;
+extern crate tetrahedrane;
 
-use sdl3d::vid::*;
-use sdl3d::start;
+use tetrahedrane::vid::*;
+use tetrahedrane::start;
 
 fn main() {
     let mut window = start::Window::new(640, 480, "Hello!", 4 as usize);
