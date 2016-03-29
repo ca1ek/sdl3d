@@ -3,9 +3,10 @@ extern crate sinulation;
 
 use super::start;
 
-#[cfg(target_os = "redox")]
+#[cfg(target_os = "redox")] // if os is redox use these trig functions instead of the ones from standard lib
 use sinulation::Trig;
 
+/// Color struct. Stores colors in 8-bit RGB.
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
     pub r: u8,
@@ -22,23 +23,23 @@ impl Color {
         }
     }
 
+    /// Converts tetrahedrane colors to ones accepted by orbclient library.
     pub fn orb_color(&self) -> orbclient::color::Color {
         orbclient::color::Color::rgb(self.r, self.g, self.b)
     }
 }
 
+/// 2D point. Coordinates are screen pixels.
 #[derive(Clone, Copy, Debug)]
 pub struct FlatPoint {
     pub x: i32,
     pub y: i32,
 }
 
-/*impl FlatPoint {
-    pub fn make_sdl(&self) -> sdl2::rect::Point {
-        sdl2::rect::Point::new(self.x, self.y)
-    }
-}*/
-
+/// 3D point. Coordinates are floating point, similar to OpenGL coordinates. 
+///
+/// 0.0 is center, -1.0 is left, 1.0 is right etc.
+///
 #[derive(Clone, Copy, Debug)]
 pub struct DepthPoint {
     pub x: f32,
@@ -55,6 +56,7 @@ pub struct DepthPoint {
 }
 
 impl DepthPoint {
+    /// Creates a new 3D point.
     pub fn new(x: f32, y: f32, z: f32) -> DepthPoint {
         DepthPoint {
             x: x, 
@@ -71,6 +73,7 @@ impl DepthPoint {
         }
     }
 
+    /// Converts into 2D point, with perspective.
     pub fn flat_point(&mut self, engine_scr_x: u32, engine_scr_y: u32, offset_x: f32, offset_y: f32, offset_z: f32) -> FlatPoint { 
         if self.z > -0.01 && self.z < 0.0 {
             self.z = 0.001
@@ -86,6 +89,7 @@ impl DepthPoint {
         }
     }
 
+    /// Applies camera rotations from variables `x_y`, `x_z` and `y_z`
     pub fn apply_camera_rotations(&mut self, engine: &start::Window) {
         #[cfg(not(target_os = "redox"))]
         use std::f32::consts::PI;
@@ -174,6 +178,7 @@ impl DepthPoint {
         self.z = new_z + engine.camera_z;
     }  
 
+    /// Rotates the point around provided coordinates by the angle.
     pub fn coord_rotate_x_y(&mut self, x: f32, y: f32, angle: f32) {
         #[cfg(not(target_os = "redox"))]
         use std::f32;
@@ -191,6 +196,7 @@ impl DepthPoint {
         self.y = new_y + y;
     }
     
+    /// Rotates the point around provided coordinates by the angle.
     pub fn coord_rotate_x_z(&mut self, x: f32, z: f32, angle: f32) {
         #[cfg(not(target_os = "redox"))]
         use std::f32;
@@ -208,6 +214,7 @@ impl DepthPoint {
         self.z = new_z + z;
     }
 
+    /// Rotates the point around provided coordinates by the angle.
     pub fn coord_rotate_y_z(&mut self, y: f32, z: f32, angle: f32) {
         #[cfg(not(target_os = "redox"))]
         use std::f32;
@@ -226,6 +233,7 @@ impl DepthPoint {
     }  
 }
 
+/// Triangle. `p1`, `p2`, `p3` are it's vertexes.
 #[derive(Clone, Copy, Debug)]
 pub struct Triangle {
     pub p1: DepthPoint,
@@ -244,6 +252,7 @@ pub struct Triangle {
 }
 
 impl Triangle {
+    /// Creates a new triangle
     pub fn new(p1: DepthPoint, p2: DepthPoint, p3: DepthPoint, x: f32, y: f32, z: f32, color: Color) -> Triangle {
         Triangle {
             p1: p1,
@@ -262,6 +271,7 @@ impl Triangle {
         }
     }
 
+    /// Applies camera rotations from variables `x_y`, `x_z` and `y_z`
     pub fn apply_camera_rotations(&mut self, engine: &start::Window) {
         self.p1.x_y += self.x_y;
         self.p1.x_z += self.x_z;
@@ -292,18 +302,21 @@ impl Triangle {
         self.p3.y_z -= self.y_z;
     }
 
+    /// Rotates the point around provided coordinates by the angle.
     pub fn coord_rotate_x_y(&mut self, x: f32, y: f32, angle: f32) {
         self.p1.coord_rotate_x_y(x, y, angle);
         self.p2.coord_rotate_x_y(x, y, angle);
         self.p3.coord_rotate_x_y(x, y, angle);
     }
 
+    /// Rotates the point around provided coordinates by the angle.
     pub fn coord_rotate_x_z(&mut self, x: f32, z: f32, angle: f32) {
         self.p1.coord_rotate_x_z(x, z, angle);
         self.p2.coord_rotate_x_z(x, z, angle);
         self.p3.coord_rotate_x_z(x, z, angle);
     }
 
+    /// Rotates the point around provided coordinates by the angle.
     pub fn coord_rotate_y_z(&mut self, y: f32, z: f32, angle: f32) {
         self.p1.coord_rotate_y_z(y, z, angle);
         self.p2.coord_rotate_y_z(y, z, angle);
@@ -311,12 +324,14 @@ impl Triangle {
     }
 }
 
+/// A group of triangles.
 #[derive(Clone, Debug)]
 pub struct TriangleGroup {
     pub triangles: Vec<Triangle>,
 }
 
 impl TriangleGroup {
+    /// Create a new group of triangles.
     pub fn new(triangles: Vec<Triangle>) -> TriangleGroup {
         TriangleGroup {
             triangles: triangles

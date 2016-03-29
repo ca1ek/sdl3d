@@ -8,9 +8,11 @@ use sinulation::Trig;
 
 use super::vid;
 
+// Had to store this somewhere.
 /*cargo build --example tetrahedrane_example --target i386-unknown-redox.json -- -C no-prepopulate-passes -C no-stack-check -C opt-level=2 -Z no-landing-pads -A dead_code
 */
 
+/// Stores data about rendering, window and camera.
 pub struct Window {
     pub screen_x: u32,
     pub screen_y: u32,
@@ -29,6 +31,9 @@ pub struct Window {
 }
 
 impl Window {
+    /// Create a new window.
+    ///
+    /// * `triangle_space` - how much space to preallocate for the triangles
     pub fn new(screen_x: u32, screen_y: u32, window_name: &str, triangle_space: usize) -> Window {
         let win = orbclient::window::Window::new_flags(10, 10, screen_x, screen_y, window_name, true).unwrap();
         Window {
@@ -49,6 +54,7 @@ impl Window {
         }
     }
 
+    /// Renders triangles onto the framebuffer.
     pub fn render(&mut self) {
         for mut triangle in &mut self.render_queue {
             let flat_1 = triangle.p1.flat_point(self.screen_x, self.screen_y, 
@@ -69,13 +75,17 @@ impl Window {
             self.window.line(flat_1.x, flat_1.y, flat_3.x, flat_3.y, triangle.color.orb_color());
         }
 
-        self.render_queue = Vec::new();
+        let used_space = self.render_queue.len();
+
+        self.render_queue = Vec::with_capacity(used_space);
     }
 
+    /// Push a triangle onto the render queue.
     pub fn push(&mut self, triangle: vid::Triangle) {
         self.render_queue.push(triangle);
     }
 
+    /// Push a group of triangles onto the render queue.
     pub fn push_group(&mut self, group: &vid::TriangleGroup) {
         for triangle in &group.triangles {
             self.push(triangle.clone());
