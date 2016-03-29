@@ -92,6 +92,7 @@ impl Window {
         }
     }
 
+    /// Normalize the camera rotations.
     pub fn normalize_camera(&mut self) {
         #[cfg(not(target_os = "redox"))]
         use std::f32::consts::PI;
