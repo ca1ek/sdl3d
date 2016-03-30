@@ -249,6 +249,8 @@ pub struct Triangle {
     pub y_z: f32,
 
     pub color: Color,
+
+    pub triangle_shader: Vec<Box<Fn(u32, u32, Color)>>
 }
 
 impl Triangle {
@@ -268,6 +270,8 @@ impl Triangle {
             y_z: 0.0,
             
             color: color,
+
+            triangle_shader: Vec::new();
         }
     }
 
@@ -326,7 +330,7 @@ impl Triangle {
 
 /// A group of triangles.
 #[derive(Clone, Debug)]
-pub struct TriangleGroup {
+pub struct TriangleGroup{
     pub triangles: Vec<Triangle>,
 }
 
