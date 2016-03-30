@@ -234,8 +234,8 @@ impl DepthPoint {
 }
 
 /// Triangle. `p1`, `p2`, `p3` are it's vertexes.
-#[derive(Clone, Copy, Debug)]
-pub struct Triangle {
+#[derive(Clone)]
+pub struct Triangle<'a> {
     pub p1: DepthPoint,
     pub p2: DepthPoint,
     pub p3: DepthPoint,
@@ -250,12 +250,12 @@ pub struct Triangle {
 
     pub color: Color,
 
-    pub triangle_shader: Vec<Box<Fn(u32, u32, Color)>>
+    pub triangle_shader: &'a [Box<Fn(u32, u32, Color)>]
 }
 
-impl Triangle {
+impl<'a> Triangle<'a> {
     /// Creates a new triangle
-    pub fn new(p1: DepthPoint, p2: DepthPoint, p3: DepthPoint, x: f32, y: f32, z: f32, color: Color) -> Triangle {
+    pub fn new(p1: DepthPoint, p2: DepthPoint, p3: DepthPoint, x: f32, y: f32, z: f32, color: Color) -> Triangle<'a> {
         Triangle {
             p1: p1,
             p2: p2, 
@@ -271,7 +271,7 @@ impl Triangle {
             
             color: color,
 
-            triangle_shader: Vec::new();
+            triangle_shader: &[],
         }
     }
 
@@ -329,12 +329,12 @@ impl Triangle {
 }
 
 /// A group of triangles.
-#[derive(Clone, Debug)]
-pub struct TriangleGroup{
-    pub triangles: Vec<Triangle>,
+#[derive(Clone)]
+pub struct TriangleGroup<'a>{
+    pub triangles: Vec<Triangle<'a>>,
 }
 
-impl TriangleGroup {
+impl<'a> TriangleGroup<'a> {
     /// Create a new group of triangles.
     pub fn new(triangles: Vec<Triangle>) -> TriangleGroup {
         TriangleGroup {

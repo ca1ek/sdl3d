@@ -13,7 +13,7 @@ use super::vid;
 */
 
 /// Stores data about rendering, window and camera.
-pub struct Window {
+pub struct Window<'a> {
     pub screen_x: u32,
     pub screen_y: u32,
 
@@ -27,10 +27,10 @@ pub struct Window {
 
     pub window: Box<orbclient::window::Window>,
 
-    pub render_queue: Vec<vid::Triangle>,
+    pub render_queue: Vec<&'a vid::Triangle<'a>>,
 }
 
-impl Window {
+impl<'a> Window<'a> {
     /// Create a new window.
     ///
     /// * `triangle_space` - how much space to preallocate for the triangles
@@ -57,15 +57,15 @@ impl Window {
     /// Renders triangles onto the framebuffer.
     pub fn render(&mut self) {
         for mut triangle in &mut self.render_queue {
-            let flat_1 = triangle.p1.flat_point(self.screen_x, self.screen_y, 
+            let flat_1 = triangle.p1.clone().flat_point(self.screen_x, self.screen_y, 
                                                 triangle.x + self.camera_x, 
                                                 triangle.y + self.camera_y,
                                                 triangle.z + self.camera_z);
-            let flat_2 = triangle.p2.flat_point(self.screen_x, self.screen_y,
+            let flat_2 = triangle.p2.clone().flat_point(self.screen_x, self.screen_y,
                                                 triangle.x + self.camera_x,
                                                 triangle.y + self.camera_y,
                                                 triangle.z + self.camera_z);
-            let flat_3 = triangle.p3.flat_point(self.screen_x, self.screen_y,
+            let flat_3 = triangle.p3.clone().flat_point(self.screen_x, self.screen_y,
                                                 triangle.x + self.camera_x,
                                                 triangle.y + self.camera_y,
                                                 triangle.z + self.camera_z);
@@ -81,14 +81,14 @@ impl Window {
     }
 
     /// Push a triangle onto the render queue.
-    pub fn push(&mut self, triangle: vid::Triangle) {
-        self.render_queue.push(triangle);
+    pub fn push(&mut self, triangle: &'a vid::Triangle<'a>) {
+        self.render_queue.push(&triangle);
     }
 
     /// Push a group of triangles onto the render queue.
-    pub fn push_group(&mut self, group: &vid::TriangleGroup) {
+    pub fn push_group(&mut self, group: &'a vid::TriangleGroup<'a>) {
         for triangle in &group.triangles {
-            self.push(triangle.clone());
+            self.push(&triangle);
         }
     }
 
