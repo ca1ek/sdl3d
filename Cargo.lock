@@ -33,7 +33,7 @@ dependencies = [
 [[package]]
 name = "orbclient"
 version = "0.1.6"
-source = "git+https://github.com/ca1ek/orbclient#2c5936e9b537fedb46531e40a5f05d1eabe7e88b"
+source = "git+https://github.com/ca1ek/orbclient#972ad8d5cd19c7484386b94303c920bf4864e20e"
 dependencies = [
  "sdl2 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
