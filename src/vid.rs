@@ -6,6 +6,20 @@ use super::start;
 #[cfg(target_os = "redox")] // if os is redox use these trig functions instead of the ones from standard lib
 use sinulation::Trig;
 
+pub struct Shader {
+    pub id: u16,
+    pub shader: Box<Fn(&Triangle, &start::Window)>
+}
+
+impl Shader {
+    pub fn new(id: u16, shader: Box<Fn(&Triangle, &start::Window)>) -> Shader {
+        Shader {
+            id: id,
+            shader: shader,
+        }
+    }
+}
+
 /// Color struct. Stores colors in 8-bit RGB.
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
@@ -234,7 +248,7 @@ impl DepthPoint {
 }
 
 /// Triangle. `p1`, `p2`, `p3` are it's vertexes.
-#[derive(Clone, Copy, Debug)]
+//#[derive(Clone)]
 pub struct Triangle {
     pub p1: DepthPoint,
     pub p2: DepthPoint,
@@ -249,6 +263,8 @@ pub struct Triangle {
     pub y_z: f32,
 
     pub color: Color,
+
+    pub shader_ids: Vec<u16>,
 }
 
 impl Triangle {
@@ -268,6 +284,8 @@ impl Triangle {
             y_z: 0.0,
             
             color: color,
+
+            shader_ids: Vec::new(),
         }
     }
 
@@ -325,7 +343,7 @@ impl Triangle {
 }
 
 /// A group of triangles.
-#[derive(Clone, Debug)]
+//#[derive(Clone)]
 pub struct TriangleGroup {
     pub triangles: Vec<Triangle>,
 }

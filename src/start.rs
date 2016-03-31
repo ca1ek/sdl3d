@@ -27,7 +27,9 @@ pub struct Window {
 
     pub window: Box<orbclient::window::Window>,
 
-    pub render_queue: Vec<vid::Triangle>,
+    pub render_queue: Vec<vid::Triangle>, 
+
+    pub shaders: Vec<vid::Shader>
 }
 
 impl Window {
@@ -51,13 +53,15 @@ impl Window {
             window: win,
 
             render_queue: Vec::with_capacity(triangle_space),
+
+            shaders: Vec::new(),
         }
     }
 
     /// Renders triangles onto the framebuffer.
     pub fn render(&mut self) {
         for mut triangle in &mut self.render_queue {
-            let flat_1 = triangle.p1.flat_point(self.screen_x, self.screen_y, 
+            /*let flat_1 = triangle.p1.flat_point(self.screen_x, self.screen_y, 
                                                 triangle.x + self.camera_x, 
                                                 triangle.y + self.camera_y,
                                                 triangle.z + self.camera_z);
@@ -72,7 +76,7 @@ impl Window {
             
             self.window.line(flat_1.x, flat_1.y, flat_2.x, flat_2.y, triangle.color.orb_color());
             self.window.line(flat_3.x, flat_3.y, flat_2.x, flat_2.y, triangle.color.orb_color());
-            self.window.line(flat_1.x, flat_1.y, flat_3.x, flat_3.y, triangle.color.orb_color());
+            self.window.line(flat_1.x, flat_1.y, flat_3.x, flat_3.y, triangle.color.orb_color());*/
         }
 
         let used_space = self.render_queue.len();
@@ -86,11 +90,11 @@ impl Window {
     }
 
     /// Push a group of triangles onto the render queue.
-    pub fn push_group(&mut self, group: &vid::TriangleGroup) {
+    /*pub fn push_group(&mut self, group: &vid::TriangleGroup) {
         for triangle in &group.triangles {
             self.push(triangle.clone());
         }
-    }
+    }*/
 
     /// Normalize the camera rotations.
     pub fn normalize_camera(&mut self) {
