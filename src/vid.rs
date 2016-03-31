@@ -8,20 +8,27 @@ use sinulation::Trig;
 
 pub struct Shader {
     pub id: u16,
-    pub shader: Box<Fn(&Triangle)>
+    pub shader: Box<Fn(&Triangle, &mut start::Window)>
 }
 
 impl Shader {
-    pub fn new(id: u16, shader: Box<Fn(&Triangle)>) -> Shader {
+    pub fn new(id: u16, shader: Box<Fn(&Triangle, &mut start::Window)>) -> Shader {
         Shader {
             id: id,
             shader: shader,
         }
     }
 
-    pub fn apply(self, triangle: &Triangle) {
-        (self.shader)(triangle);
+    pub fn null() -> Shader {
+        Shader {
+            id: 0,
+            shader: Box::new(|triangle: &Triangle, window: &mut start::Window| {}),
+        }
     }
+
+    /*pub fn apply(self, triangle: &Triangle) {
+        (self.shader)(triangle);
+    }*/
 }
 
 /// Color struct. Stores colors in 8-bit RGB.

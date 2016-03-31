@@ -28,8 +28,6 @@ pub struct Window {
     pub window: Box<orbclient::window::Window>,
 
     pub render_queue: Vec<vid::Triangle>, 
-
-    pub shaders: Vec<vid::Shader>,
 }
 
 impl Window {
@@ -54,13 +52,11 @@ impl Window {
             window: win,
 
             render_queue: Vec::with_capacity(triangle_space),
-
-            shaders: Vec::new(),
         }
     }
 
     /// Renders triangles onto the framebuffer.
-    pub fn render(&mut self) {
+    pub fn render(&mut self, triangle: vid::Triangle, shaders: &Vec<vid::Shader>) {
 
         /*for triangle in self.render_queue.clone() {
             /*let flat_1 = triangle.p1.flat_point(self.screen_x, self.screen_y, 
@@ -100,17 +96,15 @@ impl Window {
                 unwrapped.apply(&triangle, self);
             }
         }*/
-
-        for triangle in self.render_queue.clone() {
-            for shader_id in triangle.shader_ids.clone().iter() {
-                let assoc_shader = self.shaders.iter().find(|shader| shader.id == shader_id.clone());
-                if assoc_shader.is_none() {
-                    continue;
-                }
-                let unwrapped_shader = assoc_shader.unwrap();
-                (unwrapped_shader.shader)(&triangle);
+        for shader_id in triangle.shader_ids.clone().iter() {
+            let assoc_shader = shaders.iter().find(|&shader| shader.id == shader_id.clone());
+            if assoc_shader.is_none() {
+                continue;
             }
+            let unwrapped_shader = assoc_shader.unwrap();
+            (unwrapped_shader.shader)(&triangle, self);
         }
+
 
         let used_space = self.render_queue.len();
 
