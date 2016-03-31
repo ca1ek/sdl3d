@@ -6,6 +6,31 @@ use super::start;
 #[cfg(target_os = "redox")] // if os is redox use these trig functions instead of the ones from standard lib
 use sinulation::Trig;
 
+pub struct Shader {
+    pub id: u16,
+    pub shader: Box<Fn(&Triangle, &mut start::Window)>
+}
+
+impl Shader {
+    pub fn new(id: u16, shader: Box<Fn(&Triangle, &mut start::Window)>) -> Shader {
+        Shader {
+            id: id,
+            shader: shader,
+        }
+    }
+
+    pub fn null() -> Shader {
+        Shader {
+            id: 0,
+            shader: Box::new(|triangle: &Triangle, window: &mut start::Window| {}),
+        }
+    }
+
+    /*pub fn apply(self, triangle: &Triangle) {
+        (self.shader)(triangle);
+    }*/
+}
+
 /// Color struct. Stores colors in 8-bit RGB.
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
@@ -234,8 +259,8 @@ impl DepthPoint {
 }
 
 /// Triangle. `p1`, `p2`, `p3` are it's vertexes.
-#[derive(Clone)]
-pub struct Triangle<'a> {
+#[derive(Clone, Copy)]
+pub struct Triangle {
     pub p1: DepthPoint,
     pub p2: DepthPoint,
     pub p3: DepthPoint,
@@ -250,7 +275,7 @@ pub struct Triangle<'a> {
 
     pub color: Color,
 
-    pub triangle_shader: &'a [Box<Fn(u32, u32, Color)>]
+    pub shader_ids: [u16; 8],
 }
 
 impl<'a> Triangle<'a> {
@@ -271,7 +296,7 @@ impl<'a> Triangle<'a> {
             
             color: color,
 
-            triangle_shader: &[],
+            shader_ids: [0; 8],
         }
     }
 
@@ -329,9 +354,9 @@ impl<'a> Triangle<'a> {
 }
 
 /// A group of triangles.
-#[derive(Clone)]
-pub struct TriangleGroup<'a>{
-    pub triangles: Vec<Triangle<'a>>,
+//#[derive(Clone)]
+pub struct TriangleGroup {
+    pub triangles: Vec<Triangle>,
 }
 
 impl<'a> TriangleGroup<'a> {
