@@ -4,6 +4,6 @@ extern crate sinulation;
 pub mod start;
 pub mod vid;
 
-#[allow(dead_code)]
+#[allow(unused_variables, dead_code)]
 pub mod shaders;
 //pub mod out;
