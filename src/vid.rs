@@ -360,13 +360,15 @@ impl Triangle {
 //#[derive(Clone)]
 pub struct TriangleGroup {
     pub triangles: Vec<Triangle>,
+    pub shader_ids: [u16; 8],
 }
 
 impl TriangleGroup {
     /// Create a new group of triangles.
     pub fn new(triangles: Vec<Triangle>) -> TriangleGroup {
         TriangleGroup {
-            triangles: triangles
+            triangles: triangles,
+            shader_ids: [0; 8],
         }
     }
 }
