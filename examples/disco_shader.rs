@@ -23,6 +23,8 @@ fn main() {
         window.window.set(Color::new(20, 40, 60).orb_color());
         window.window.set(Color::new(20, 40, 60).orb_color());
 
+        triangle.coord_rotate_x_y(0.0, 0.0, 0.01);
+
         window.render(triangle, &shaders); 
 
         window.window.sync();
