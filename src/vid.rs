@@ -281,9 +281,9 @@ pub struct Triangle {
     pub shader_ids: [u16; 8],
 }
 
-impl<'a> Triangle<'a> {
+impl Triangle {
     /// Creates a new triangle
-    pub fn new(p1: DepthPoint, p2: DepthPoint, p3: DepthPoint, x: f32, y: f32, z: f32, color: Color) -> Triangle<'a> {
+    pub fn new(p1: DepthPoint, p2: DepthPoint, p3: DepthPoint, x: f32, y: f32, z: f32, color: Color) -> Triangle {
         Triangle {
             p1: p1,
             p2: p2, 
@@ -362,7 +362,7 @@ pub struct TriangleGroup {
     pub triangles: Vec<Triangle>,
 }
 
-impl<'a> TriangleGroup<'a> {
+impl TriangleGroup {
     /// Create a new group of triangles.
     pub fn new(triangles: Vec<Triangle>) -> TriangleGroup {
         TriangleGroup {
