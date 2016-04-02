@@ -1,4 +1,3 @@
-#[allow(dead_code)]
 extern crate rand;
 extern crate orbclient;
 
@@ -214,7 +213,7 @@ pub fn filled_texture_naive(id: u16, texture_path: &str) -> vid::Shader {
                 let random = rand::random::<u8>();
 
                 if alpha > 0.0 && beta > 0.0 && gamma > 0.0 {
-                    window.window.pixel(px, py, img_slice[(px + py*(img_w as i32)) as usize]);
+                    window.window.pixel(px, py, img_slice[(px - leftmost.x + (py - upmost.y)*(img_w as i32)) as usize]);
                 }
             }
         }
@@ -225,4 +224,59 @@ pub fn filled_texture_naive(id: u16, texture_path: &str) -> vid::Shader {
     shader.image_data = img;
 
     shader
+}
+
+pub fn filled_triangle_gradient(id: u16) -> vid::Shader {
+    let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {
+        let p1 = triangle.p1.clone().flat_point(window.screen_x, window.screen_y,
+                                                triangle.x + window.camera_x, 
+                                                triangle.y + window.camera_y,
+                                                triangle.z + window.camera_z);
+
+        let p2 = triangle.p2.clone().flat_point(window.screen_x, window.screen_y,
+                                                triangle.x + window.camera_x,
+                                                triangle.y + window.camera_y,
+                                                triangle.z + window.camera_z);
+
+        let p3 = triangle.p3.clone().flat_point(window.screen_x, window.screen_y,
+                                                triangle.x + window.camera_x,
+                                                triangle.y + window.camera_y,
+                                                triangle.z + window.camera_z);
+
+        struct FloatPoint {
+            x: f32,
+            y: f32
+        }
+
+        let points = [p1, p2, p3];
+
+        let upmost = points.iter().max_by_key(|p| -p.y).unwrap().clone();
+        let leftmost = points.iter().max_by_key(|p| -p.x).unwrap().clone();
+        let rightmost = points.iter().max_by_key(|p| p.x).unwrap().clone();
+        let lowmost = points.iter().max_by_key(|p| p.y).unwrap().clone();
+
+        for px in leftmost.x..rightmost.x {
+            for py in upmost.y..lowmost.y {
+                let p1 = FloatPoint {x: p1.x as f32, y: p1.y as f32};
+                let p2 = FloatPoint {x: p2.x as f32, y: p2.y as f32};
+                let p3 = FloatPoint {x: p3.x as f32, y: p3.y as f32};
+
+                let p = FloatPoint {x: px as f32, y: py as f32};
+
+                let alpha = ((p2.y - p3.y)*(p.x - p3.x) + (p3.x - p2.x)*(p.y - p3.y)) / ((p2.y - p3.y)*(p1.x - p3.x) + (p3.x - p2.x)*(p1.y - p3.y));
+                let beta = ((p3.y - p1.y)*(p.x - p3.x) + (p1.x - p3.x)*(p.y - p3.y)) / ((p2.y - p3.y)*(p1.x - p3.x) + (p3.x - p2.x)*(p1.y - p3.y));
+                let gamma = 1.0 - alpha - beta;
+
+                if alpha > 0.0 && beta > 0.0 && gamma > 0.0 {
+                    let p1_dist = ((px as f32 - p1.x)*(px as f32 - p1.x) + (py as f32 - p1.y)*(py as f32 - p1.y)).sqrt();
+                    let p2_dist = ((px as f32 - p2.x)*(px as f32 - p2.x) + (py as f32 - p2.y)*(py as f32 - p2.y)).sqrt();
+                    let p3_dist = ((px as f32 - p3.x)*(px as f32 - p3.x) + (py as f32 - p3.y)*(py as f32 - p3.y)).sqrt();
+
+                    window.window.pixel(px, py, vid::Color::new(p1_dist as u8, p2_dist as u8, p3_dist as u8).orb_color());
+                }
+            }
+        }
+    };
+
+    vid::Shader::new(id, Box::new(rasterize_shader))
 }
