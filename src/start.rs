@@ -72,6 +72,14 @@ impl Window {
         self.render_queue = Vec::with_capacity(used_space);
     }
 
+    pub fn render_group(&mut self, group: vid::TriangleGroup, shaders: &Vec<vid::Shader>) {
+        let group_shaders = group.shader_ids.clone();
+        for triangle in group.triangles {
+            self.render(triangle, shaders);
+        }
+    }
+
+
     /// Push a triangle onto the render queue.
     pub fn push(&mut self, triangle: vid::Triangle) {
         self.render_queue.push(triangle);
