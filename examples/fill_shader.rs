@@ -24,6 +24,8 @@ fn main() {
         window.window.set(Color::new(20, 40, 60).orb_color());
 
         triangle.coord_rotate_x_y(0.0, 0.0, 0.01);
+        triangle.coord_rotate_x_z(0.0, 3.0, 0.02);
+        triangle.coord_rotate_y_z(0.0, 3.0, 0.03);
 
         window.render(triangle, &shaders); 
 
