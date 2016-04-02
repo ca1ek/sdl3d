@@ -57,54 +57,15 @@ impl Window {
 
     /// Renders triangles onto the framebuffer.
     pub fn render(&mut self, triangle: vid::Triangle, shaders: &Vec<vid::Shader>) {
-
-        /*for triangle in self.render_queue.clone() {
-            /*let flat_1 = triangle.p1.flat_point(self.screen_x, self.screen_y, 
-                                                triangle.x + self.camera_x, 
-                                                triangle.y + self.camera_y,
-                                                triangle.z + self.camera_z);
-            let flat_2 = triangle.p2.flat_point(self.screen_x, self.screen_y,
-                                                triangle.x + self.camera_x,
-                                                triangle.y + self.camera_y,
-                                                triangle.z + self.camera_z);
-            let flat_3 = triangle.p3.flat_point(self.screen_x, self.screen_y,
-                                                triangle.x + self.camera_x,
-                                                triangle.y + self.camera_y,
-                                                triangle.z + self.camera_z);
-            
-            self.window.line(flat_1.x, flat_1.y, flat_2.x, flat_2.y, triangle.color.orb_color());
-            self.window.line(flat_3.x, flat_3.y, flat_2.x, flat_2.y, triangle.color.orb_color());
-            self.window.line(flat_1.x, flat_1.y, flat_3.x, flat_3.y, triangle.color.orb_color());*/
-
-            /*for shader_id in triangle.shader_ids.iter() {
-                let assoc_shader = shader_vec.iter().find(|shader| shader.id == shader_id.clone());
-                if assoc_shader.is_none() {
-                    continue;
-                }
-                let unwrapped_shader = assoc_shader.unwrap();
-                unwrapped_shader.apply(&triangle);
-            }*/
-
-            let shader_ids = triangle.shader_ids.clone();
-            for shader_id in shader_ids.iter() {
-                let shader = shader_vec.iter().find(|shader| shader.id == shader_id.clone());
-                if shader.is_none() {
-                    continue;
-                }
-                let unwrapped = shader.unwrap();
-
-                unwrapped.apply(&triangle, self);
-            }
-        }*/
         for shader_id in triangle.shader_ids.clone().iter() {
-            let assoc_shader = shaders.iter().find(|&shader| shader.id == shader_id.clone());
+            let mut assoc_shader = shaders.iter().find(|&shader| shader.id == shader_id.clone());
             if assoc_shader.is_none() {
                 continue;
             }
-            let unwrapped_shader = assoc_shader.unwrap();
-            (unwrapped_shader.shader)(&triangle, self);
-        }
 
+            let mut unwrapped_shader = assoc_shader.unwrap();
+            (unwrapped_shader.shader)(&triangle, self, unwrapped_shader);
+        }
 
         let used_space = self.render_queue.len();
 

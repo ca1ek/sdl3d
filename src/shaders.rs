@@ -6,7 +6,7 @@ use super::vid;
 use super::start;
 
 pub fn wireframe(id: u16) -> vid::Shader {
-    let wireframe_shader = |triangle: &vid::Triangle, window: &mut start::Window| {
+    let wireframe_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {
         let flat_1 = triangle.p1.clone().flat_point(window.screen_x, window.screen_y, 
                                             triangle.x + window.camera_x, 
                                             triangle.y + window.camera_y,
@@ -29,7 +29,7 @@ pub fn wireframe(id: u16) -> vid::Shader {
 }
 
 pub fn disco_wireframe(id: u16) -> vid::Shader {
-    let noise_shader = |triangle: &vid::Triangle, window: &mut start::Window| {
+    let noise_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {
         let flat_1 = triangle.p1.clone().flat_point(window.screen_x, window.screen_y, 
                                             triangle.x + window.camera_x, 
                                             triangle.y + window.camera_y,
@@ -58,7 +58,7 @@ pub fn disco_wireframe(id: u16) -> vid::Shader {
 }
 
 pub fn filled_triangle_color(id: u16) -> vid::Shader {
-    let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window| {
+    let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {
         let p1 = triangle.p1.clone().flat_point(window.screen_x, window.screen_y,
                                                 triangle.x + window.camera_x, 
                                                 triangle.y + window.camera_y,
@@ -109,7 +109,7 @@ pub fn filled_triangle_color(id: u16) -> vid::Shader {
 }
 
 pub fn filled_b_w_noise(id: u16) -> vid::Shader {
-    let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window| {
+    let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {
         let p1 = triangle.p1.clone().flat_point(window.screen_x, window.screen_y,
                                                 triangle.x + window.camera_x, 
                                                 triangle.y + window.camera_y,
@@ -161,10 +161,12 @@ pub fn filled_b_w_noise(id: u16) -> vid::Shader {
     vid::Shader::new(id, Box::new(rasterize_shader))
 }
 
-pub fn filled_texture_naive(id: u16) -> vid::Shader {
-    let img = orbclient::BmpFile::from_path(&"bmp/test.bmp");
+pub fn filled_texture_naive(id: u16, texture_path: &str) -> vid::Shader {
+    let img = orbclient::BmpFile::from_path(texture_path);
 
-    let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window| {
+    let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {
+        use std::ops::Deref;
+
         let p1 = triangle.p1.clone().flat_point(window.screen_x, window.screen_y,
                                                 triangle.x + window.camera_x, 
                                                 triangle.y + window.camera_y,
@@ -184,6 +186,11 @@ pub fn filled_texture_naive(id: u16) -> vid::Shader {
             x: f32,
             y: f32
         }
+
+        let img_w = wrapper.image_data.width();
+        let img_h = wrapper.image_data.height();
+
+        let img_slice = wrapper.image_data.deref();
 
         let points = [p1, p2, p3];
 
@@ -207,11 +214,15 @@ pub fn filled_texture_naive(id: u16) -> vid::Shader {
                 let random = rand::random::<u8>();
 
                 if alpha > 0.0 && beta > 0.0 && gamma > 0.0 {
-                    window.window.pixel(px, py, triangle.color.orb_color());
+                    window.window.pixel(px, py, img_slice[(px + py*(img_w as i32)) as usize]);
                 }
             }
         }
     };
 
-    vid::Shader::new(id, Box::new(rasterize_shader))
+    let mut shader = vid::Shader::new(id, Box::new(rasterize_shader));
+
+    shader.image_data = img;
+
+    shader
 }

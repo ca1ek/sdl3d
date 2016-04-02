@@ -8,12 +8,12 @@ use sinulation::Trig;
 
 pub struct Shader {
     pub id: u16,
-    pub shader: Box<Fn(&Triangle, &mut start::Window)>,
+    pub shader: Box<Fn(&Triangle, &mut start::Window, &Shader)>,
     pub image_data: orbclient::BmpFile,
 }
 
 impl Shader {
-    pub fn new(id: u16, shader: Box<Fn(&Triangle, &mut start::Window)>) -> Shader {
+    pub fn new(id: u16, shader: Box<Fn(&Triangle, &mut start::Window, &Shader)>) -> Shader {
         Shader {
             id: id,
             shader: shader,
@@ -24,7 +24,7 @@ impl Shader {
     pub fn null() -> Shader {
         Shader {
             id: 0,
-            shader: Box::new(|triangle: &Triangle, window: &mut start::Window| {}),
+            shader: Box::new(|triangle: &Triangle, window: &mut start::Window, wrapper: &Shader| {}),
             image_data: orbclient::BmpFile::default(),
         }
     }
