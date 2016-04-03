@@ -30,7 +30,13 @@ fn main() {
 
     //triangle_group.triangles[0].shader_ids[0] = 1;
 
+    let mut frames = 0;
+
+    let mut total_duration = std::time::Duration::new(0, 0);
+
     loop {
+        let start_time = std::time::Instant::now();
+
         window.window.set(Color::new(20, 40, 60).orb_color());
         window.window.set(Color::new(20, 40, 60).orb_color());
 
@@ -45,7 +51,18 @@ fn main() {
 
         window.window.sync();
 
+        let end_time = std::time::Instant::now();
 
+        let duration = end_time.duration_since(start_time);
+
+        if total_duration.as_secs() < 1 {
+            frames += 1;
+            total_duration += duration;
+        } else {
+            println!("{:?}", frames);
+            frames = 0;
+            total_duration = std::time::Duration::new(0, 0);
+        }
         //std::thread::sleep(std::time::Duration::from_millis(33));
     }
 }
