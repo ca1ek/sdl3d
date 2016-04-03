@@ -3,6 +3,7 @@ extern crate orbclient;
 
 use super::vid;
 use super::start;
+use super::texture;
 
 pub fn wireframe(id: u16) -> vid::Shader {
     let wireframe_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {
@@ -160,6 +161,7 @@ pub fn filled_b_w_noise(id: u16) -> vid::Shader {
     vid::Shader::new(id, Box::new(rasterize_shader))
 }
 
+/*
 pub fn filled_texture_naive(id: u16, texture_path: &str) -> vid::Shader {
     let img = orbclient::BmpFile::from_path(texture_path);
 
@@ -224,28 +226,9 @@ pub fn filled_texture_naive(id: u16, texture_path: &str) -> vid::Shader {
     shader.image_data = img;
 
     shader
-}
+}*/
 
-pub fn filled_texture(id: u16, texture_path: &str, uv_p1x: f32, uv_p1y: f32, uv_p2x: f32, uv_p2y: f32, uv_p3x: f32, uv_p3y: f32) -> vid::Shader {
-    let img = orbclient::BmpFile::from_path(texture_path);
-
-    fn bmp_uv_coord(img: &orbclient::BmpFile, x: f32, y: f32) -> orbclient::Color {
-        use std::ops::Deref;
-
-        let px = (x * img.width() as f32) as i32;
-        let py = (y * img.height() as f32) as i32;
-
-        let img_w = img.width();
-
-        let img_slice = img.deref();
-
-        if (px + py *(img_w as i32)) as usize > 260000 {
-            orbclient::Color::rgb(255,255,255)
-        } else {
-            img_slice[(px + py *(img_w as i32)) as usize]
-        }
-    }
-
+pub fn filled_texture(id: u16, texture: texture::UVTexture, uv_p1x: f32, uv_p1y: f32, uv_p2x: f32, uv_p2y: f32, uv_p3x: f32, uv_p3y: f32) -> vid::Shader {
     let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {
         use std::ops::Deref;
 
@@ -269,10 +252,10 @@ pub fn filled_texture(id: u16, texture_path: &str, uv_p1x: f32, uv_p1y: f32, uv_
             y: f32
         }
 
-        let img_w = wrapper.image_data.width();
-        let img_h = wrapper.image_data.height();
+        let img_w = wrapper.texture.bmp.width();
+        let img_h = wrapper.texture.bmp.height();
 
-        let img_slice = wrapper.image_data.deref();
+        let img_slice = wrapper.texture.bmp.deref();
 
         let points = [p1, p2, p3];
 
@@ -299,15 +282,26 @@ pub fn filled_texture(id: u16, texture_path: &str, uv_p1x: f32, uv_p1y: f32, uv_
                 let random = rand::random::<u8>();
 
                 if alpha > 0.0 && beta > 0.0 && gamma > 0.0 {
+                    let uv_p1x = wrapper.flags[0];
+                    let uv_p1y = wrapper.flags[1];
+                    let uv_p2x = wrapper.flags[2];
+                    let uv_p2y = wrapper.flags[3];
+                    let uv_p3x = wrapper.flags[4];
+                    let uv_p3y = wrapper.flags[5];
+
                     let uv_p1 = FloatPoint {x: (p1.x - w as f32) / w as f32, y: (p1.y - h as f32) / h as f32};
                     let uv_p2 = FloatPoint {x: (p2.x - w as f32) / w as f32, y: (p2.y - h as f32) / h as f32};
                     let uv_p3 = FloatPoint {x: (p3.x - w as f32) / w as f32, y: (p3.y - h as f32) / h as f32};
 
-                    let uv_p = FloatPoint {x: (p.x - w as f32) / w as f32, y: (p.y - h as f32) / h as f32};
+                    //println!("{:?}", uv_p1.x);
+
+                    let uv_p = FloatPoint {x: (alpha * uv_p1x + beta * uv_p2x + gamma * uv_p3x) as f32, y: (alpha * uv_p1y + beta * uv_p2y + gamma * uv_p3y) as f32};
 
                     //println!("{:?}", uv_p.x);
 
-                    window.window.pixel(px, py, bmp_uv_coord(&wrapper.image_data, uv_p1.x, uv_p1.y));
+                    let texture = &wrapper.texture;
+
+                    window.window.pixel(px, py, texture.get_by_uv(uv_p.x, uv_p.y));
                 }
             }
         }
@@ -315,7 +309,7 @@ pub fn filled_texture(id: u16, texture_path: &str, uv_p1x: f32, uv_p1y: f32, uv_
 
     let mut shader = vid::Shader::new(id, Box::new(rasterize_shader));
 
-    shader.image_data = img;
+    shader.texture = texture;
 
     shader.flags[0] = uv_p1x;
     shader.flags[1] = uv_p1y;
@@ -327,7 +321,7 @@ pub fn filled_texture(id: u16, texture_path: &str, uv_p1x: f32, uv_p1y: f32, uv_
     shader
 }
 
-pub fn filled_gradient_depth(id: u16, texture_path: &str) -> vid::Shader {
+/*pub fn filled_gradient_depth(id: u16, texture_path: &str) -> vid::Shader {
     let img = orbclient::BmpFile::from_path(texture_path);
 
     let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {
@@ -417,7 +411,7 @@ pub fn filled_gradient_depth(id: u16, texture_path: &str) -> vid::Shader {
     shader.image_data = img;
 
     shader
-}
+}*/
 
 pub fn filled_triangle_gradient(id: u16) -> vid::Shader {
     let rasterize_shader = |triangle: &vid::Triangle, window: &mut start::Window, wrapper: &vid::Shader| {

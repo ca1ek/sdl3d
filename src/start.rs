@@ -72,10 +72,36 @@ impl Window {
         self.render_queue = Vec::with_capacity(used_space);
     }
 
+    pub fn render_addon_shader(&mut self, triangle: vid::Triangle, shaders: &Vec<vid::Shader>, additional_id: [u16; 8]) {
+        for shader_id in triangle.shader_ids.clone().iter() {
+            let mut assoc_shader = shaders.iter().find(|&shader| shader.id == shader_id.clone());
+            if assoc_shader.is_none() {
+                continue;
+            }
+
+            let mut unwrapped_shader = assoc_shader.unwrap();
+            (unwrapped_shader.shader)(&triangle, self, unwrapped_shader);
+        }
+
+        for shader_id in additional_id.iter() {
+            let mut assoc_shader = shaders.iter().find(|&shader| shader.id == shader_id.clone());
+            if assoc_shader.is_none() {
+                continue;
+            }
+
+            let mut unwrapped_shader = assoc_shader.unwrap();
+            (unwrapped_shader.shader)(&triangle, self, unwrapped_shader);
+        }
+
+        let used_space = self.render_queue.len();
+
+        self.render_queue = Vec::with_capacity(used_space);
+    }
+
     pub fn render_group(&mut self, group: vid::TriangleGroup, shaders: &Vec<vid::Shader>) {
         let group_shaders = group.shader_ids.clone();
         for triangle in group.triangles {
-            self.render(triangle, shaders);
+            self.render_addon_shader(triangle, shaders, group_shaders);
         }
     }
 
@@ -86,11 +112,11 @@ impl Window {
     }
 
     /// Push a group of triangles onto the render queue.
-    /*pub fn push_group(&mut self, group: &vid::TriangleGroup) {
+    pub fn push_group(&mut self, group: &vid::TriangleGroup) {
         for triangle in &group.triangles {
             self.push(triangle.clone());
         }
-    }*/
+    }
 
     /// Normalize the camera rotations.
     pub fn normalize_camera(&mut self) {

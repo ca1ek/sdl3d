@@ -15,7 +15,7 @@ fn main() {
                                  0.0, 0.0, 0.0,
                                  Color::new(200, 200, 200));
 
-    shaders.push(shaders::filled_texture(1, &"bmp/test.bmp", 0.5, 0.5, 0.0, 1.0, 1.0, 1.0));
+    shaders.push(shaders::filled_texture(1, &"bmp/nicolas.bmp", 0.0, 0.0, 1.0, 1.0, 0.0, 1.0));
 
     triangle.shader_ids[0] = 1;
 

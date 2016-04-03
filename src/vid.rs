@@ -2,6 +2,7 @@ extern crate orbclient;
 extern crate sinulation;
 
 use super::start;
+use super::texture;
 
 #[cfg(target_os = "redox")] // if os is redox use these trig functions instead of the ones from standard lib
 use sinulation::Trig;
@@ -9,7 +10,7 @@ use sinulation::Trig;
 pub struct Shader {
     pub id: u16,
     pub shader: Box<Fn(&Triangle, &mut start::Window, &Shader)>,
-    pub image_data: orbclient::BmpFile,
+    pub texture: texture::UVTexture,
     pub flags: [f32; 8],
 }
 
@@ -18,7 +19,7 @@ impl Shader {
         Shader {
             id: id,
             shader: shader,
-            image_data: orbclient::BmpFile::default(),
+            texture: texture::UVTexture::default(),
             flags: [0.0; 8],
         }
     }
@@ -27,7 +28,7 @@ impl Shader {
         Shader {
             id: 0,
             shader: Box::new(|triangle: &Triangle, window: &mut start::Window, wrapper: &Shader| {}),
-            image_data: orbclient::BmpFile::default(),
+            texture: texture::UVTexture::default(),
             flags: [0.0; 8],
         }
     }
@@ -265,7 +266,7 @@ impl DepthPoint {
 }
 
 /// Triangle. `p1`, `p2`, `p3` are it's vertexes.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Triangle {
     pub p1: DepthPoint,
     pub p2: DepthPoint,
@@ -360,7 +361,7 @@ impl Triangle {
 }
 
 /// A group of triangles.
-//#[derive(Clone)]
+#[derive(Clone)]
 pub struct TriangleGroup {
     pub triangles: Vec<Triangle>,
     pub shader_ids: [u16; 8],
@@ -373,5 +374,21 @@ impl TriangleGroup {
             triangles: triangles,
             shader_ids: [0; 8],
         }
+    }
+
+    pub fn square(x: f32, y: f32, z: f32, w: f32, h: f32) -> TriangleGroup {
+        let triangle1 = Triangle::new(DepthPoint::new(0.0, 0.0, 0.0),
+                                      DepthPoint::new(0.0, h, 0.0),
+                                      DepthPoint::new(w, h, 0.0),
+                                      x, y, z,
+                                      Color::new(255,255,255));
+
+        let triangle2 = Triangle::new(DepthPoint::new(0.0, 0.0, 0.0),
+                                      DepthPoint::new(w, 0.0, 0.0),
+                                      DepthPoint::new(w, h, 0.0),
+                                      x, y, z,
+                                      Color::new(255,255,255));
+
+        TriangleGroup::new(vec![triangle1, triangle2])
     }
 }

@@ -15,7 +15,7 @@ fn main() {
                                  0.0, 0.0, 0.0,
                                  Color::new(200, 200, 200));
 
-    shaders.push(shaders::filled(1));
+    shaders.push(shaders::filled_triangle_color(1));
     shaders.push(shaders::disco_wireframe(2));
 
     triangle.shader_ids[0] = 1;
