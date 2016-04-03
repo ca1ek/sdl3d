@@ -1,6 +1,10 @@
 # ![](/img/icon.png) tetrahedrane [![Build Status](https://api.travis-ci.org/ca1ek/tetrahedrane.svg?branch=refactor)](https://travis-ci.org/ca1ek/tetrahedrane)
 Software renderer using orbclient. Compatible with Redox and SDL2
 
+# Images
+
+![](https://giant.gfycat.com/BronzeThatInganue.gif)
+
 # Usage
 TODO
 
