@@ -30,7 +30,16 @@ impl UVTexture {
         }
     }
 
-    pub fn get_by_uv(self, x: f32, y: f32) -> orbclient::Color {
+    pub fn path(path: &str) -> UVTexture {
+        UVTexture {
+            bmp: orbclient::BmpFile::from_path(path), 
+            p1: UVPoint {x: 0.0, y: 0.0},
+            p2: UVPoint {x: 0.0, y: 1.0},
+            p3: UVPoint {x: 1.0, y: 0.0},
+        } 
+    }
+
+    pub fn get_by_uv(&self, x: f32, y: f32) -> orbclient::Color {
         use std::ops::Deref;
 
         let px = (x * self.bmp.width() as f32) as i32;
