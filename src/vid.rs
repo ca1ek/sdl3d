@@ -10,6 +10,7 @@ pub struct Shader {
     pub id: u16,
     pub shader: Box<Fn(&Triangle, &mut start::Window, &Shader)>,
     pub image_data: orbclient::BmpFile,
+    pub flags: [f32; 8],
 }
 
 impl Shader {
@@ -18,6 +19,7 @@ impl Shader {
             id: id,
             shader: shader,
             image_data: orbclient::BmpFile::default(),
+            flags: [0.0; 8],
         }
     }
 
@@ -26,6 +28,7 @@ impl Shader {
             id: 0,
             shader: Box::new(|triangle: &Triangle, window: &mut start::Window, wrapper: &Shader| {}),
             image_data: orbclient::BmpFile::default(),
+            flags: [0.0; 8],
         }
     }
 
