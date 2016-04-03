@@ -13,7 +13,7 @@ fn main() {
     // Create a triangle
     let mut triangle = Triangle::new(DepthPoint::new(0.0, -0.5, 3.0),  
                                  DepthPoint::new(0.5, 0.5, 3.0), 
-                                 DepthPoint::new(-0.5, 0.5, 3.0), 
+                                 DepthPoint::new(-0.5, 0.3, 3.0), 
                                  0.0, 0.0, 0.0,
                                  Color::new(200, 200, 200));
 
