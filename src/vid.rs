@@ -391,4 +391,47 @@ impl TriangleGroup {
 
         TriangleGroup::new(vec![triangle1, triangle2])
     }
+
+    pub fn cube(x: f32, y: f32, z: f32, x_l: f32, y_l: f32, z_l: f32) -> TriangleGroup {
+        let front_face = TriangleGroup::square(x, y, z, x_l, y_l);
+        let back_face = TriangleGroup::square(x, y, z+z_l, x_l, y_l);
+
+        let left_face = TriangleGroup::new(vec![Triangle::new(DepthPoint::new(0.0, 0.0, 0.0),
+                                                              DepthPoint::new(0.0, y_l, 0.0),
+                                                              DepthPoint::new(0.0, y_l, z_l),
+                                                              x, y, z,
+                                                              Color::new(255,255,255)),
+                                                Triangle::new(DepthPoint::new(0.0, 0.0, 0.0),
+                                                              DepthPoint::new(0.0, 0.0, z_l),
+                                                              DepthPoint::new(0.0, y_l, z_l),
+                                                              x, y, z,
+                                                              Color::new(255,255,255))]);
+
+        let right_face = TriangleGroup::new(vec![Triangle::new(DepthPoint::new(x_l, 0.0, 0.0),
+                                                              DepthPoint::new(x_l, y_l, 0.0),
+                                                              DepthPoint::new(x_l, y_l, z_l),
+                                                              x, y, z,
+                                                              Color::new(255,255,255)),
+                                                Triangle::new(DepthPoint::new(x_l, 0.0, 0.0),
+                                                              DepthPoint::new(x_l, 0.0, z_l),
+                                                              DepthPoint::new(x_l, y_l, z_l),
+                                                              x, y, z,
+                                                              Color::new(255,255,255))]);
+
+        let top_face = TriangleGroup::new(vec![Triangle::new(DepthPoint::new(0.0, 0.0, 0.0),
+                                                              DepthPoint::new(x_l, 0.0, 0.0),
+                                                              DepthPoint::new(0.0, 0.0, z_l),
+                                                              x, y, z,
+                                                              Color::new(255,255,255)),
+                                                Triangle::new(DepthPoint::new(0.0, 0.0, z_l),
+                                                              DepthPoint::new(x_l, 0.0, z_l),
+                                                              DepthPoint::new(x_l, 0.0, 0.0),
+                                                              x, y, z,
+                                                              Color::new(255,255,255))]);
+
+        TriangleGroup::new(vec![front_face.triangles[0],
+                                front_face.triangles[1],
+                                top_face.triangles[0],
+                                top_face.triangles[1]])
+    }
 }
