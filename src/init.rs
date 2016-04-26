@@ -34,4 +34,8 @@ impl Window {
     pub fn sync(&mut self) {
         self.window.sync();
     }
+
+    pub fn clear(&mut self) {
+        self.window.clear();
+    }
 }
