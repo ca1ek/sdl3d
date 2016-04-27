@@ -1,6 +1,9 @@
 extern crate orbclient;
 
+use std;
+
 #[derive(Clone, Copy, Debug)]
+/// An RGB color
 pub struct Color {
     r: u8,
     g: u8,
@@ -26,6 +29,33 @@ impl Color {
         let b = color.data & 0x000000FF;
 
         Color::new(r as u8, g as u8, b as u8)
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+/// A color with Z depth data attached
+pub struct ZBufColor {
+    pub color: Color,
+    pub z: f32,
+}
+
+impl ZBufColor {
+    pub fn new(r: u8, g: u8, b: u8, z: f32) -> ZBufColor {
+        ZBufColor {
+            color: Color {
+                r: r,
+                g: g,
+                b: b,
+            },
+            z: z,
+        }
+    }
+
+    pub fn from_color(color: Color, z: f32) -> ZBufColor {
+        ZBufColor {
+            color: color,
+            z: z,
+        }
     }
 }
 
@@ -88,37 +118,53 @@ impl Texture {
     }
 }
 
+//FIXME: This was a big mistake. Go back to rendering right to the output instead of some
+// wrapper structs like this.
 pub struct Framebuffer {
     pub width: usize,
     pub height: usize,
-    frame: Vec<Color>,
+    cache: Vec<ZBufColor>, // workaround around orbclients lack of ability to read from the screen
+    frame: super::init::Window,
 }
 
 impl Framebuffer {
-    pub fn new(w: usize, h: usize) -> Framebuffer {
-        let mut frame: Vec<Color> = Vec::new();
+    pub fn new(w: usize, h: usize, window: super::init::Window) -> Framebuffer {
+        let mut cache: Vec<ZBufColor> = Vec::new();
 
         for _ in 0..w*h {
-            frame.push(Color::new(0, 0, 0));
+            cache.push(ZBufColor::new(0, 0, 0, std::f32::INFINITY));
         }
 
         Framebuffer {
             width: w,
             height: h,
-            frame: frame,
+            cache: cache,
+            frame: window,
         }
     }
 
-    pub fn get_pixel(&self, x: u32, y: u32) -> Option<&Color> {
-        self.frame.get(y as usize*self.width + x as usize)
+    pub fn get_pixel(&self, x: u32, y: u32) -> Option<&ZBufColor> {
+        self.cache.get(y as usize*self.width + x as usize)
     }
 
-    pub fn set_pixel(&mut self, x: u32, y: u32, color: &Color) {
-        self.frame[y as usize*self.width + x as usize] = color.clone();
+    pub fn set_pixel(&mut self, x: u32, y: u32, color: &ZBufColor) {
+        self.cache[y as usize*self.width + x as usize] = color.clone(); // cache
+        self.frame.set_pixel(x as i32, y as i32, &color.color); // draw
     }
 
-    pub fn render_3d_triangles(&mut self, triangles: &Vec<&super::geometry::Triangle>, screen_h: i32) {
-        let mut flat_triangles: Vec<super::geometry::FlatTriangle> = Vec::new();
+    pub fn clear(&mut self) {
+        for pixel in 0..self.width*self.height {
+            self.cache[pixel] = ZBufColor::new(0, 0, 0, std::f32::INFINITY); // cache
+        }
+        self.frame.clear(); // draw
+    }
+
+    pub fn sync(&mut self) {
+        self.frame.sync();
+    }
+
+    pub fn render_3d_triangles(&mut self, triangles: &Vec<&super::geometry::Triangle>, screen_h: i32, screen_w: i32) {
+        /*let mut flat_triangles: Vec<super::geometry::FlatTriangle> = Vec::new();
         for triangle in triangles {
             flat_triangles.push(triangle.make_2d())
         }
@@ -128,11 +174,45 @@ impl Framebuffer {
                 for triangle in &flat_triangles {
                     //self.set_pixel(triangle.p1.screen_point(), triangle.p1.y, &Color::new(255, 255, 255));
                     if triangle.inside(x as u32, y as u32, screen_h) {
-                        self.set_pixel(x as u32, y as u32, &Color::new(255, 0, 0));
+                        self.set_pixel(x as u32, y as u32, &ZBufColor::new(255, 0, 0, 0.0));
+                        //TODO: Use real Z value.
                         //print!("inside");
                     } else {
-                        self.set_pixel(x as u32, y as u32, &Color::new(0, 0, 0));
+                        self.set_pixel(x as u32, y as u32, &ZBufColor::new(0, 0, 0, 0.0));
                     }
+                }
+            }
+        }*/
+
+        for x in 0..self.width {
+            for y in 0..self.height {
+                for triangle in triangles {
+                    let flat_triangle = triangle.make_2d();
+
+                    let (alpha, beta, gamma) = flat_triangle.get_barycentric(x as u32, y as u32, screen_h, screen_w);
+
+                    if alpha > 0.0 && beta > 0.0 && gamma > 0.0 {
+                        self.set_pixel(x as u32, y as u32, &ZBufColor::new(255, 0, 0,
+                            triangle.z_from_barycentric(alpha, beta, gamma)));
+                        //TODO: Use real Z value.
+                    } else {
+                        //self.set_pixel(x as u32, y as u32, &ZBufColor::new(0, 0, 0, 0.0));
+                    }
+                }
+            }
+        }
+    }
+
+    pub fn draw_cached_zbuf(&mut self) {
+        for x in 0..self.width as u32 {
+            for y in 0..self.height as u32 {
+                let pixel = self.cache.get(y as usize*self.width + x as usize);
+
+                if pixel.is_none() {
+                    continue;
+                } else {
+                    let z_color = (((1.0 / -pixel.unwrap().z) * 255.0) + 255.0) as u8;
+                    &self.frame.set_pixel(x as i32, y as i32, &Color::new(z_color, z_color, z_color));
                 }
             }
         }
