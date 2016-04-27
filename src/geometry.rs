@@ -28,8 +28,10 @@ pub struct FlatPoint {
 }
 
 impl FlatPoint {
-    pub fn screen_point(&self, screen_h: i32) -> (i32, i32) {
-        (screen_h/2 + (self.x * (screen_h/2) as f32) as i32, screen_h/2 + (self.y * (screen_h/2) as f32) as i32)
+    pub fn screen_point(&self, screen_h: i32, screen_w: i32) -> (i32, i32) {
+        //(screen_h/2 + (self.x * (screen_h/2) as f32) as i32, screen_h/2 + (self.y * (screen_h/2) as f32) as i32)
+        (((self.x) * screen_h as f32) as i32 + screen_w / 2,
+         ((self.y) * screen_h as f32) as i32 + screen_h / 2)
     }
 }
 
@@ -67,6 +69,10 @@ impl<'a> Triangle<'a> {
             texture: self.texture,
         }
     }
+
+    pub fn z_from_barycentric(&self, alpha: f32, beta: f32, gamma: f32) -> f32 {
+        self.p1.z * alpha + self.p2.z * beta + self.p3.z * gamma
+    }
 }
 
 #[derive(Debug)]
@@ -81,16 +87,16 @@ pub struct FlatTriangle<'a> {
 }
 
 impl<'a> FlatTriangle<'a> {
-    pub fn get_barycentric(&self, x: u32, y: u32, screen_h: i32) -> (f32, f32, f32) {
+    pub fn get_barycentric(&self, x: u32, y: u32, screen_h: i32, screen_w: i32) -> (f32, f32, f32) {
         #[derive(Debug)]
         struct ScreenPoint {
             x: f32,
             y: f32,
         }
 
-        let (p1x, p1y) = self.p1.screen_point(screen_h);
-        let (p2x, p2y) = self.p2.screen_point(screen_h);
-        let (p3x, p3y) = self.p3.screen_point(screen_h);
+        let (p1x, p1y) = self.p1.screen_point(screen_h, screen_w);
+        let (p2x, p2y) = self.p2.screen_point(screen_h, screen_w);
+        let (p3x, p3y) = self.p3.screen_point(screen_h, screen_w);
 
         let p1 = ScreenPoint {x: p1x as f32, y: p1y as f32};
         let p2 = ScreenPoint {x: p2x as f32, y: p2y as f32};
@@ -109,8 +115,8 @@ impl<'a> FlatTriangle<'a> {
         (alpha, beta, gamma)
     }
 
-    pub fn inside(&self, x: u32, y: u32, screen_h: i32) -> bool {
-        let (alpha, beta, gamma) = self.get_barycentric(x, y, screen_h);
+    pub fn inside(&self, x: u32, y: u32, screen_h: i32, screen_w: i32) -> bool {
+        let (alpha, beta, gamma) = self.get_barycentric(x, y, screen_h, screen_w);
         //println!("{:?} {:?} {:?}", alpha, beta, gamma);
         if alpha > 0.0 && beta > 0.0 && gamma > 0.0 {
             true
