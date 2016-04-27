@@ -6,6 +6,8 @@ fn main() {
 
     let red = tetrahedrane::render::Color::new(255, 0, 0);
 
+    let mut counter = 0;
+
     loop {
         for x in 0..100 {
             for y in 0..100 {
@@ -18,5 +20,10 @@ fn main() {
         window.sync();
 
         std::thread::sleep(std::time::Duration::from_millis(33));
+
+        counter += counter + 1;
+        if counter > 60 {
+            break;
+        }
     }
 }
