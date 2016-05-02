@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
@@ -42,7 +43,7 @@ pub struct Triangle<'a> {
     pub uv_p1: FlatPoint,
     pub uv_p2: FlatPoint,
     pub uv_p3: FlatPoint,
-    texture: &'a super::render::Texture,
+    pub texture: &'a super::render::Texture,
 }
 
 impl<'a> Triangle<'a> {
@@ -72,6 +73,17 @@ impl<'a> Triangle<'a> {
 
     pub fn z_from_barycentric(&self, alpha: f32, beta: f32, gamma: f32) -> f32 {
         self.p1.z * alpha + self.p2.z * beta + self.p3.z * gamma
+    }
+
+    pub fn get_normal(&self) -> Point {
+        let u = Point::new(self.p2.x - self.p1.x, self.p2.y - self.p1.y, self.p2.z - self.p1.z);
+        let v = Point::new(self.p3.x - self.p1.x, self.p3.y - self.p1.y, self.p3.z - self.p1.z);
+
+        let norm_x = u.y * v.z - u.z * v.y;
+        let norm_y = u.z * v.x - u.x * v.z;
+        let norm_z = u.x * v.y - u.y * v.x;
+
+        Point::new(norm_x, norm_y, norm_z)
     }
 }
 

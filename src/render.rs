@@ -148,7 +148,7 @@ impl Framebuffer {
     }
 
     pub fn set_pixel(&mut self, x: u32, y: u32, color: &ZBufColor) {
-        self.cache[y as usize*self.width + x as usize] = color.clone(); // cache
+        //self.cache[y as usize*self.width + x as usize] = color.clone(); // cache
         self.frame.set_pixel(x as i32, y as i32, &color.color); // draw
     }
 
@@ -192,9 +192,14 @@ impl Framebuffer {
                     let (alpha, beta, gamma) = flat_triangle.get_barycentric(x as u32, y as u32, screen_h, screen_w);
 
                     if alpha > 0.0 && beta > 0.0 && gamma > 0.0 {
-                        self.set_pixel(x as u32, y as u32, &ZBufColor::new(255, 0, 0,
-                            triangle.z_from_barycentric(alpha, beta, gamma)));
-                        //TODO: Use real Z value.
+                        let color_opt = triangle.texture.get_for_triangle(alpha, beta, gamma, &triangle);
+                        let mut color = Color::new(0,0,0);
+                        if !color_opt.is_none() {
+                            color = color_opt.unwrap().clone();
+                        }
+                        self.set_pixel(x as u32, y as u32, 
+                            &ZBufColor::from_color(color,
+                                        triangle.z_from_barycentric(alpha, beta, gamma)));
                     } else {
                         //self.set_pixel(x as u32, y as u32, &ZBufColor::new(0, 0, 0, 0.0));
                     }
