@@ -4,6 +4,5 @@ version = "0.1.0"
 authors = ["ca1ek <ca1ek@users.noreply.github.com>"]
 
 [dependencies]
-orbclient = { git = "https://github.com/ca1ek/orbclient" }
-sinulation = { git = "https://github.com/Ticki/sinulation" }
+orbclient = { git = "https://github.com/redox-os/orbclient" }
 rand = "0.3.14"
