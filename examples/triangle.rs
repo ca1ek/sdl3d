@@ -31,6 +31,8 @@ fn main() {
         framebuffer.sync();
         framebuffer.clear();
 
+        triangle.get_normal();
+
         p2z += 0.1;
         std::thread::sleep(std::time::Duration::from_millis(33));
 
