@@ -1,11 +1,5 @@
 extern crate orbclient;
+extern crate orbimage;
 
-//pub mod start;
-//pub mod vid;
+pub mod renderers;
 pub mod geometry;
-pub mod init;
-pub mod render;
-
-//pub mod shaders;
-//pub mod texture;
-//pub mod out;
