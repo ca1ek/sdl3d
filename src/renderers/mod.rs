@@ -1,4 +1,5 @@
 pub mod wireframe;
+pub mod filled;
 
 /// Do perspective calculation on a point, return (x, y).
 fn perpective(x: f32, y: f32, z: f32) -> (f32, f32) {
