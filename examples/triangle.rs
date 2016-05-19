@@ -30,7 +30,7 @@ fn main() {
         
         window.sync();
         
-        let end = std::time::Instant::now();
+        let end = std::time::Instant::now();.
         
         framecounter += 1;
         timecounter += end.duration_since(begin);
