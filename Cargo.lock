@@ -2,18 +2,14 @@
 name = "tetrahedrane"
 version = "0.1.0"
 dependencies = [
- "orbclient 0.1.8 (git+https://github.com/redox-os/orbclient)",
- "orbimage 0.1.0 (git+https://github.com/redox-os/orbimage.git)",
+ "orbclient 0.1.8 (git+https://github.com/ca1ek/orbclient)",
+ "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sinulation 0.1.0 (git+https://github.com/Ticki/sinulation)",
 ]
 
 [[package]]
 name = "bitflags"
 version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "gcc"
-version = "0.3.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -27,16 +23,6 @@ version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "libz-sys"
-version = "0.1.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "gcc 0.3.28 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.1.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "pkg-config 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "num"
 version = "0.1.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -48,49 +34,9 @@ dependencies = [
 [[package]]
 name = "orbclient"
 version = "0.1.8"
-source = "git+https://github.com/redox-os/orbclient#59cd841b37cd26fee594615def80b73d1fe15c2b"
+source = "git+https://github.com/ca1ek/orbclient#28affe4f8ef6cf3c1bf4b122b9726f12ce17800f"
 dependencies = [
  "sdl2 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "orbclient"
-version = "0.1.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "sdl2 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "orbimage"
-version = "0.1.0"
-source = "git+https://github.com/redox-os/orbimage.git#bbe01ece496f9d67681d07541554a874ed3791d4"
-dependencies = [
- "orbclient 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
- "png 0.1.0 (git+https://github.com/servo/rust-png.git)",
-]
-
-[[package]]
-name = "pkg-config"
-version = "0.3.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "png"
-version = "0.1.0"
-source = "git+https://github.com/servo/rust-png.git#b8c2bf074719e5a39b9e4423989f5f06fa79317d"
-dependencies = [
- "gcc 0.3.28 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.1.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "png-sys 1.6.16 (git+https://github.com/servo/rust-png.git)",
-]
-
-[[package]]
-name = "png-sys"
-version = "1.6.16"
-source = "git+https://github.com/servo/rust-png.git#b8c2bf074719e5a39b9e4423989f5f06fa79317d"
-dependencies = [
- "libz-sys 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -126,4 +72,9 @@ dependencies = [
  "libc 0.1.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "num 0.1.31 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "sinulation"
+version = "0.1.0"
+source = "git+https://github.com/Ticki/sinulation#51513022ebff4dd83652da6af3c1541c1c3e6844"
 
