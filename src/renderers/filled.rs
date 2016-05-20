@@ -63,7 +63,7 @@ pub fn triangle_p(x1: f32, y1: f32, z1: f32,
     window.line(x3, y3, x1, y1, color);
 }
     
-pub fn triangle_s(triangle: geometry::Triangle,
+pub fn triangle_s(triangle: &geometry::Triangle,
                   color: orbclient::Color, window: &mut orbclient::window::Window) {
     triangle_p(triangle.p1.x, triangle.p1.y, triangle.p1.z,
                triangle.p2.x, triangle.p2.y, triangle.p2.z,
