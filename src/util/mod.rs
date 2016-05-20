@@ -22,18 +22,26 @@ pub trait Rotation {
 }
 
 impl Rotation for Point {
-    fn rotate_x_y(&mut self, x: f32, y: f32, angle: f32) {
+    /// Rotates on x and y axes. You shouldn't rotate a point you rotated
+    /// earlier, instead keep rotating the initial one.
+    /// For some reason, it breaks for some reason if you keep rotating too much
+    fn rotate_x_y(&mut self, x: f32, y: f32, angle: f32) -> Point {
         let (x, y) = rotate(self.x, self.y, x, y, angle);
-        self.x = x;
-        self.y = y;
+        Point {
+            x: x,
+            y: y,
+            z: self.z,
+        }
     }
     
+    /// Rotate on x and z axes. Same error as with rotate_x_y
     fn rotate_x_z(&mut self, x: f32, z: f32, angle: f32) {
         let (x, z) = rotate(self.x, self.z, x, z, angle);
         self.x = x;
         self.z = z;
     }
     
+    /// Rotate on y and z axes. Same error as with rotate_x_y
     fn rotate_y_z(&mut self, y: f32, z: f32, angle: f32) {
         let (y, z) = rotate(self.y, self.z, y, z, angle);
         self.y = y;
