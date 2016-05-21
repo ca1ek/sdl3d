@@ -1,20 +1,6 @@
 extern crate orbclient;
+extern crate orbimage;
 extern crate tetrahedrane;
-
-/*fn rotate(x: f32, y: f32, around_x: f32, around_y: f32, angle: f32) -> (f32, f32) {
-    use std::f32;
-    
-    let s = f32::sin(angle);
-    let c = f32::cos(angle);
-    
-    let x = x - around_x;
-    let y = y - around_y;
-    
-    let x = x * c - y * s;
-    let y = x * s + y * c;
-    
-    (x + around_x, y + around_y)
-}*/
 
 fn main() {
     use tetrahedrane::geometry::{Triangle, Point};
@@ -30,6 +16,11 @@ fn main() {
     let mut triangle2 = Triangle::new(Point::new( 0.5,  0.5, 1.0),
                                       Point::new(-0.5,  0.5, 1.0),
                                       Point::new(-0.5, -0.5, 1.0));
+                                      
+    let img = orbimage::Image::from_path(&"bmp/redox.png").unwrap();
+    
+    let texture1 = tetrahedrane::texture::FloatTexture::from_image(&img, (0.0, 0.0), (1.0, 0.0), (1.0, 1.0));
+    let texture2 = tetrahedrane::texture::FloatTexture::from_image(&img, (1.0, 1.0), (0.0, 1.0), (0.0, 0.0));
     
     'gameloop: loop {
         use tetrahedrane::util::Rotation;
@@ -48,13 +39,13 @@ fn main() {
         
         window.clear();
         
-        tetrahedrane::renderers::filled::triangle_s(&triangle1, 
+        tetrahedrane::renderers::textured::triangle_s(&triangle1, 
                                                     orbclient::Color::rgb(255,0,255),
-                                                    &mut window);
+                                                    &mut window, &texture1);
                                                     
-        tetrahedrane::renderers::filled::triangle_s(&triangle2, 
+        tetrahedrane::renderers::textured::triangle_s(&triangle2, 
                                                     orbclient::Color::rgb(255,0,255),
-                                                    &mut window);
+                                                    &mut window, &texture2);
                                                     
         /*let (n_x, n_y) = rotate(triangle1.p1.x, triangle1.p1.y, 0.0, 0.0, 0.01);
         
@@ -62,10 +53,10 @@ fn main() {
         
         triangle1.p1.x = n_x;
         triangle1.p1.y = n_y;*/
-        triangle1.rotate_x_y(0.0, 0.0, 0.01);
-        triangle2.rotate_x_y(0.0, 0.0, 0.01);
-        triangle1.rotate_x_z(0.0, 1.0, 0.01);
-        triangle2.rotate_x_z(0.0, 1.0, 0.01);
+        //triangle1.rotate_x_y(0.0, 0.0, 0.01);
+        //triangle2.rotate_x_y(0.0, 0.0, 0.01);
+        //triangle1.rotate_x_z(0.0, 1.0, 0.01);
+        //triangle2.rotate_x_z(0.0, 1.0, 0.01);
         triangle1.rotate_y_z(0.0, 1.0, 0.02);
         triangle2.rotate_y_z(0.0, 1.0, 0.02);
         
