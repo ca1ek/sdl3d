@@ -6,3 +6,4 @@ authors = ["ca1ek <ca1ek@users.noreply.github.com>"]
 [dependencies]
 orbclient = "0.1"
 orbimage = { git = "https://github.com/redox-os/orbimage.git" }
+clippy = "*"
