@@ -1,3 +1,8 @@
+#![feature(plugin)]
+
+#![plugin(clippy)]
+
+
 extern crate orbclient;
 extern crate orbimage;
 
