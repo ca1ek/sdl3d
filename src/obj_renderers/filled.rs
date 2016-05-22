@@ -1,4 +1,4 @@
-use super::super::renderers::wireframe;
+use super::super::renderers::filled;
 use super::super::texture;
 use super::super::geometry;
 use super::RenderFn;

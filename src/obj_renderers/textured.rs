@@ -1,10 +1,10 @@
-use super::super::renderers::wireframe;
+use super::super::renderers::textured;
 use super::super::texture;
 use super::super::geometry;
 use super::RenderFn;
 use orbclient;
 
-/// An object for the wireframe renderer
+/// An object for the textured renderer
 pub struct Renderer {
     //empty
 }
@@ -15,6 +15,6 @@ impl RenderFn for Renderer {
                   window: &mut orbclient::window::Window,
                   texture: &T) {
     
-        wireframe::triangle_s(triangle, color, window);
+        textured::triangle_s(triangle, color, window, texture);
     }
 }
