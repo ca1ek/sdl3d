@@ -12,3 +12,8 @@ fn screen(x: f32, y: f32, screen_width: i32, screen_height: i32) -> (i32, i32) {
     ((x * (screen_height/2) as f32) as i32 + (screen_width/2),
      (y * (screen_height/2) as f32) as i32 + (screen_height/2))
 }
+
+fn screen_f(x: f32, y: f32, screen_width: i32, screen_height: i32) -> (f32, f32) {
+    (x * (screen_height/2) as f32 + (screen_width/2) as f32,
+     y * (screen_height/2) as f32 + (screen_height/2) as f32)
+}
