@@ -5,3 +5,4 @@ pub mod renderers;
 pub mod geometry;
 pub mod util;
 pub mod texture;
+pub mod obj_renderers;
